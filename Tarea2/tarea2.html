@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Salazar Medina Diana, Vélez Santiago Jesús" />
+
+
+<title>Bioinformática Estructural</title>
+
+<script src="tarea2_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="tarea2_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="tarea2_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="tarea2_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="tarea2_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="tarea2_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="tarea2_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="tarea2_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="tarea2_files/navigation-1.1/tabsets.js"></script>
+<link href="tarea2_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="tarea2_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4,h5",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Bioinformática Estructural</h1>
+<h3 class="subtitle"><em>Tarea 2</em></h3>
+<h4 class="author"><em>Salazar Medina Diana, Vélez Santiago Jesús</em></h4>
+<h4 class="date"><em>11 de febrero de 2019</em></h4>
+
+</div>
+
+
+<hr />
+<div id="eleccion-de-proteina-a-caracterizar" class="section level2">
+<h2>1. Elección de proteína a caracterizar</h2>
+<p>Para esta tarea se escogió a <strong>1GHK</strong>, una proteína de unión a DNA proveniente del <strong>Fago F1</strong>, expresada en E. <em>coli</em>, cuya estructura se determinó con el método de difracción de rayos-X. Posee una única cadena compuesta de 86 aminoácidos y está formada mayoritariamente por <span class="math inline">\(\beta\)</span>-sheets.[1]</p>
+<div class="figure" style="text-align: center">
+<img src="tarea2_files/figure-html/3D_1GKH-1.png" alt="**Figure 1.** Tertiary structure of the 1GKH protein, represented with the ribbon model." width="672" />
+<p class="caption">
+<strong>Figure 1.</strong> Tertiary structure of the 1GKH protein, represented with the ribbon model.
+</p>
+</div>
+</div>
+<div id="caracterizacion-de-estructura-secundaria" class="section level2">
+<h2>2. Caracterización de estructura secundaria</h2>
+<p>Se determinó la estructura secundaria de <em>1GHK</em>, expresada en el código de tres estados: <strong>H</strong> para los aminoácidos que formen <span class="math inline">\(\alpha\)</span>-hélices, <strong>E</strong> para los que forman <span class="math inline">\(\beta\)</span>-sheets y <strong>C</strong> para los que se encuentran en los loops.</p>
+<div id="extraccion-de-angulos-diedros-de-un-archivo-pdb" class="section level3">
+<h3>2.1 Extracción de ángulos diédros de un archivo PDB</h3>
+<p><code>extract_angles_of_pdb.pl</code> procesa un archivo en formato PDB (<em>Protein Data Bank</em>)[2] para obtener los ángulos diédros (<span class="math inline">\(\phi\)</span>, <span class="math inline">\(\psi\)</span> y <span class="math inline">\(\omega\)</span>) de cada residuo protéico y de esta forma porder representarlos en un <em>diagrama de Ramachandran</em> y clasificar los aminoácidos según su localiación en el gráfico.</p>
+<p><details><summary>Mostrar código</summary></p>
+<pre class="perl"><code>#!/usr/bin/perl -w
+
+# prog2.2 calcula los angulos diedros de una proteina en formato PDB
+# Bruno Contreras-Moreira, adaptado de http://praveenvijay.netfirms.com/scripts.htm#backbone
+
+use strict;
+use Math::Trig;
+
+my ($PDBfile,@coordenadas,@atomo,@residuo,@cadena,@res_id,@x,@y,@z);
+my ($total,$j,$i) = (0,1);
+
+if(!$ARGV[0]){ die &quot;# usage: $0 &lt;PDB file&gt;\n&quot;; }
+else{ $PDBfile = $ARGV[0] }
+
+## 1) lee coordenadas atomicas en formato PDB
+open(PDB,$PDBfile)|| die &quot;# $0 : no puedo leer $PDBfile\n&quot;;
+while(&lt;PDB&gt;)
+{
+    last if(/^ENDMDL/); # para estructuras NMR como 1lfu, TER es otra opcion
+    next if not(/^ATOM\s+\d+\s+(?:N|CA|C)\s+/);
+    push(@coordenadas,$_);
+}
+close(PDB);
+
+## 2) recorre secuencia buscando atomos N,CA,C consecutivos
+for $i (0..$#coordenadas-2)
+{
+    #ATOM   2231  N   ALA P  78     -14.689   7.253 -23.476
+    $residuo[$j] = substr($coordenadas[$i],17,3);
+    $cadena[$j] = substr($coordenadas[$i],21,1);
+    $res_id[$j]  = substr($coordenadas[$i],23,3);
+    $atomo[$j]   = substr($coordenadas[$i],12,4);
+    $atomo[$j+1] = substr($coordenadas[$i+1],12,4);
+    $atomo[$j+2] = substr($coordenadas[$i+2],12,4); 
+
+    if($atomo[$j] eq &#39; N  &#39; &amp;&amp; $atomo[$j+1] eq &#39; CA &#39; &amp;&amp; $atomo[$j+2] eq &#39; C  &#39;)
+    {
+        $x[$j]{&#39;N&#39;} = substr($coordenadas[$i],30,8);   
+        $y[$j]{&#39;N&#39;} = substr($coordenadas[$i],38,8);   
+        $z[$j]{&#39;N&#39;} = substr($coordenadas[$i],46,8);   
+                                                               
+        $x[$j]{&#39;CA&#39;} = substr($coordenadas[$i+1],30,8);
+        $y[$j]{&#39;CA&#39;} = substr($coordenadas[$i+1],38,8);
+        $z[$j]{&#39;CA&#39;} = substr($coordenadas[$i+1],46,8); 
+
+        $x[$j]{&#39;C&#39;} = substr($coordenadas[$i+2],30,8); 
+        $y[$j]{&#39;C&#39;} = substr($coordenadas[$i+2],38,8);
+        $z[$j]{&#39;C&#39;} = substr($coordenadas[$i+2],46,8);
+        $j++;
+        $total++;
+    }
+}
+print &quot;# $0 : fichero PDB: $PDBfile ($total residuos)\n&quot;;
+
+## 3) calcula e imprime angulos diedros
+print &quot;num\tresiduo\tphi\tpsi\tomega\n&quot;;
+for $j (2..$total-1)
+{ 
+    my ($x1,$y1,$z1,$x2,$y2,$z2,$x3,$y3,$z3,$x4,$y4,$z4,$x5,$y5,$z5,$x6,$y6,$z6); # puntos
+    my (@v1,@v2,@v3,@v4,@v5,@v6,@v7,@v8);        # vectores directores
+    my ($phi,$psi,$omega) = (-9999,-9999,-9999); # valores nulos por defecto
+
+    # toma atomos en residuos j-1,j y j+1 para definir planos y calcular angulos diedros
+    ($x1,$y1,$z1) = ( $x[$j-1]{&#39;C&#39;} , $y[$j-1]{&#39;C&#39;} , $z[$j-1]{&#39;C&#39;} ); 
+    ($x2,$y2,$z2) = ( $x[$j]{&#39;N&#39;}   , $y[$j]{&#39;N&#39;}   , $z[$j]{&#39;N&#39;} );   # Cj-1 - Nj 
+    ($x3,$y3,$z3) = ( $x[$j]{&#39;CA&#39;}  , $y[$j]{&#39;CA&#39;}  , $z[$j]{&#39;CA&#39;} );  #         \
+    ($x4,$y4,$z4) = ( $x[$j]{&#39;C&#39;}   , $y[$j]{&#39;C&#39;}   , $z[$j]{&#39;C&#39;} );   #         CAj - Cj
+    ($x5,$y5,$z5) = ( $x[$j+1]{&#39;N&#39;} , $y[$j+1]{&#39;N&#39;} , $z[$j+1]{&#39;N&#39;} ); #                \ 
+    ($x6,$y6,$z6) = ( $x[$j+1]{&#39;CA&#39;}, $y[$j+1]{&#39;CA&#39;}, $z[$j+1]{&#39;CA&#39;} );#                 Nj+1 - CAj+1
+
+    @v1 = ( $x2-$x1 , $y2-$y1 , $z2-$z1 ); # plano definido por Cj-1, Nj and CAj (para medir phi)
+    @v2 = ( $x3-$x1 , $y3-$y1 , $z3-$z1 );
+
+    @v3 = ( $x3-$x2 , $y3-$y2 , $z3-$z2 ); # plano Nj, CAj and Cj (para medir phi y psi)
+    @v4 = ( $x4-$x2 , $y4-$y2 , $z4-$z2 );
+    
+    @v5 = ( $x4-$x3 , $y4-$y3 , $z4-$z3 ); # plano CAj, Cj and Nj+1 (para medir psi)
+    @v6 = ( $x5-$x3 , $y5-$y3 , $z5-$z3 );
+
+    @v7 = ( $x5-$x4 , $y5-$y4 , $z5-$z4 ); # plano Cj, Nj+1 and CAj+1 (para medir psi y omega)
+    @v8 = ( $x6-$x4 , $y6-$y4 , $z6-$z4 );
+
+    $phi = angulo_diedro( @v1, @v2, @v3, @v4, $x3, $y3, $z3, $x2, $y2, $z2 );  # entre Nj y CAj (2Cs)
+    $psi = angulo_diedro( @v3, @v4, @v5, @v6, $x4, $y4, $z4, $x3, $y3, $z3 );  # entre CAj y Cj (2Ns)
+    $omega = angulo_diedro( @v5, @v6, @v7, @v8, $x5, $y5, $z5, $x4, $y4, $z4 );# entre Nj+1 y Cj (2CAs)
+
+    print join(&quot;\t&quot;,($res_id[$j],join(&quot; &quot;,$residuo[$j],$cadena[$j]),$phi,$psi,$omega)) . &quot;\n&quot;;
+    #printf(&quot;%4d
+    # %3s %s %8.1f %8.1f %8.1f\n&quot;,$res_id[$j],$residuo[$j],$cadena[$j],$phi,$psi,$omega);
+}
+#print &quot;#  residuo      phi      psi    omega\n&quot;;
+
+sub angulo_diedro 
+{
+    my (@p) = @_; #parametros ( v_plano1,v_plano2, v_plano3, v_plano4, enlace1, enlace2 )
+    
+    my (@v1,@v2,$modulo1,$modulo2,$prod_escalar,@normal,$cos,$ang,$signo);
+
+    ## 1) determina el angulo entre ambos planos
+    # calcula vector perpendicular a cada plano por producto vectorial
+    @v1 = ( ($p[1]*$p[5])-($p[2]*$p[4])     , ($p[2]*$p[3])-($p[0]*$p[5])     , ($p[0]*$p[4])-($p[3]*$p[1]) );
+    @v2 = ( ($p[7]*$p[11])-($p[8]*$p[10]) , ($p[8]*$p[9])-($p[6]*$p[11]) , ($p[6]*$p[10])-($p[9]*$p[7]) );
+
+    # calcula producto escalar de vectores perpendiculares para estimar cos(angulo)
+    $prod_escalar = ($v1[0]*$v2[0]+$v1[1]*$v2[1]+$v1[2]*$v2[2]);
+    $modulo1 = ((($v1[0]*$v1[0])+($v1[1]*$v1[1])+($v1[2]*$v1[2]))**0.5);
+    $modulo2 = ((($v2[0]*$v2[0])+($v2[1]*$v2[1])+($v2[2]*$v2[2]))**0.5);    
+    $cos = ($prod_escalar/($modulo1*$modulo2));
+    $ang = (Math::Trig::acos($cos))/(Math::Trig::pi/180);
+    
+    ## 2) determina el signo del angulo diedro
+    # calcula vector normal a ambos vectores perpendiculares por producto vectorial
+    @normal = ( ($v1[1]*$v2[2])-($v1[2]*$v2[1]) , ($v1[2]*$v2[0])-($v1[0]*$v2[2]) , ($v1[0]*$v2[1])-($v1[1]*$v2[0]) );
+    
+    # calcula producto escalar de vector normal y vector del enlace donde se da el angulo
+    $signo = ((($p[12]-$p[15])*($normal[0]))+(($p[13]-$p[16])*($normal[1]))+(($p[14]-$p[17])*($normal[2])));
+    if($signo &lt; 0){ $ang=-$ang } # agudo si es positivo
+    
+    return $ang;
+}</code></pre>
+<p></details></p>
+<pre class="bash"><code>perl ./code/extract_angles_of_pdb.pl ./data/P1.pdb &gt; ./data/angles.tsv</code></pre>
+</div>
+<div id="asignacion-de-categoria-a-cada-residuo." class="section level3">
+<h3>2.2 Asignación de categoria a cada residuo.</h3>
+<pre class="r"><code>library(tidyverse)
+library(stringr)
+library(rebus)
+
+protein_name &lt;- &quot;1GKH&quot;
+angle_file &lt;- &quot;./data/angles.tsv&quot;
+
+angles_files &lt;- c(angle_file)
+proccedences &lt;- c(&quot;Original PDB&quot;)
+
+angle_data &lt;- map2(angles_files, proccedences, .f = function(angle_file,proccedence){
+    read_tsv(angle_file, comment = &quot;#&quot;) %&gt;% mutate(
+      category  = case_when(
+        (phi &lt; 0 &amp; psi &lt; 0) ~ &quot;H&quot;,
+        (phi &lt; 0 &amp; psi &gt; 0) ~ &quot;E&quot;,
+        TRUE ~ &quot;C&quot;  
+      ), # Categorization more accurate but was not used in this task.
+      category2  = case_when(
+      (phi &gt;= -135 &amp; phi &lt;= -50 &amp; psi &gt;= -70 &amp; psi &lt;= 40 ) ~ &quot;H&quot;,
+      (phi &gt;= -170 &amp; phi &lt;= -45 &amp; psi &gt; 90) ~ &quot;E&quot;,
+      TRUE ~ &quot;C&quot;  
+      ),
+      proccedence = factor(proccedence, levels = proccedences))
+  }) %&gt;% bind_rows()</code></pre>
+</div>
+<div id="categorias-estructurales-de-residuos-a-formato-fasta" class="section level3">
+<h3>2.3 Categorias estructurales de residuos a formato Fasta</h3>
+<pre class="r"><code>out_fasta &lt;- paste0(&quot;&gt;&quot;, protein_name, &quot;_ramachandran\n&quot;, paste(angle_data$category, collapse = &quot;&quot;))
+write.table(out_fasta,paste0(&quot;./data/secondary_structure_sequence_&quot;,protein_name,&quot;.txt&quot;),
+            quote = FALSE,
+            row.names = FALSE,
+            col.names = FALSE)</code></pre>
+</div>
+<div id="grafico-de-ramachandran" class="section level3">
+<h3>2.4 Gráfico de Ramachandran</h3>
+<p><code>Nota: El gráfico incluye una capa de densidad; ésta no simboliza nada acerca de las regiones delimitadas.</code></p>
+<pre class="r"><code>ggplot(angle_data, aes(phi,psi, color = category)) +
+      geom_point() +
+      geom_density_2d() +
+      xlab(expression(phi(theta))) +
+      ylab(expression(psi(theta))) +
+      ggtitle(paste0(&quot;Ramachandran Plot of &quot;, protein_name)) +
+      theme(plot.title = element_text(hjust = 0.5)) +
+      scale_x_continuous(limits = c(-180, 180), breaks = c(-180, -90, 0, 90, 180)) +
+      scale_y_continuous(limits = c(-180, 180), breaks = c(-180, -90, 0, 90, 180)) +
+      facet_wrap(~proccedence)</code></pre>
+<div class="figure" style="text-align: center">
+<img src="tarea2_files/figure-html/ramachandran_plot-1.png" alt="**Figure 2. Ramachandran plot of the 1GKH protein.** The categories were assigned by quadrants. First quadrant = E, third quadrant = H, second and fourth quadrant = C." width="672" />
+<p class="caption">
+<strong>Figure 2. Ramachandran plot of the 1GKH protein.</strong> The categories were assigned by quadrants. First quadrant = E, third quadrant = H, second and fourth quadrant = C.
+</p>
+</div>
+</div>
+</div>
+<div id="extracion-de-residuos-de-archivo-pdb-a-formato-fasta" class="section level2">
+<h2>3. Extración de residuos de archivo PDB a formato fasta</h2>
+<p>A continuación se diseño un programa para extraer la secuencias fasta del archivo PDB mencionado anteriormente. El programa recibe dos argumentos: el nombre del archivo y el encabezado para hacer el fasta.</p>
+<p><details><summary>Mostrar código</summary></p>
+<pre class="perl"><code>use List::MoreUtils qw(uniq);
+
+my (@residues,$PDB_file,$name);
+
+if(!$ARGV[0] or !$ARGV[1]){ die &quot;# usage: $0 &lt;PDB file&gt;\n&quot;; }
+else{ $PDBfile = $ARGV[0]; $name = $ARGV[1]; }
+
+my %triple_to_one = (
+    &#39;CYS&#39; , &#39;C&#39;, &#39;ASP&#39; , &#39;D&#39;, &#39;SER&#39; , &#39;S&#39;, &#39;GLN&#39; , &#39;Q&#39;, &#39;LYS&#39; , &#39;K&#39;,
+    &#39;ILE&#39; , &#39;I&#39;, &#39;PRO&#39; , &#39;P&#39;, &#39;THR&#39; , &#39;T&#39;, &#39;PHE&#39; , &#39;F&#39;, &#39;ASN&#39; , &#39;N&#39;, 
+    &#39;GLY&#39; , &#39;G&#39;, &#39;HIS&#39; , &#39;H&#39;, &#39;LEU&#39; , &#39;L&#39;, &#39;ARG&#39; , &#39;R&#39;, &#39;TRP&#39; , &#39;W&#39;, 
+    &#39;ALA&#39; , &#39;A&#39;, &#39;VAL&#39; , &#39;V&#39;, &#39;GLU&#39; , &#39;E&#39;, &#39;TYR&#39; , &#39;Y&#39;, &#39;MET&#39; , &#39;M&#39;
+);
+
+# Leer Residuos de aminoácidos.
+open(PDB, $PDBfile) || die &quot;# $0 : No puedo leer $PDBfile\n&quot;;
+while(&lt;PDB&gt;)
+{
+    last if(/^ENDMDL/); # para estructuras NMR como 1lfu, TER es otra opcion
+    next if not(/^ATOM\s+\d+\s+\w+\s+(\w{3})\s+\w+\s+(\d+)/); # Extracion de Residuo y su numero de sequencia.
+    push(@residues, &quot;$1\t$2&quot;);
+}
+close(PDB);
+
+@residues = map {$triple_to_one{substr($_, 0 ,3)}} uniq @residues; # Convert each residue to single letter code.
+print &quot;&gt;&quot; . $name . &quot;\n&quot; .join(&quot;&quot;, @residues) . &quot;\n&quot;; # Print as fasta format.
+</code></pre>
+<p></details></p>
+<pre class="bash"><code>perl ./code/extract_fasta_of_pdb.pl ./data/P1.pdb &#39;1GKH_wt&#39; &gt; ./data/P1.faa</code></pre>
+</div>
+<div id="obtencion-de-matriz-de-sustitucion-de-posicion-especifica-pssm" class="section level2">
+<h2>4. Obtención de matriz de Sustitución de Posición Específica (PSSM)</h2>
+<div id="generacion-de-matriz" class="section level3">
+<h3>4.1 Generación de matriz</h3>
+<p>Con el archivo Fasta conseguido anteriormente se realizó una búsqueda de secuencias similares a P1 con PSI-BLAST y se generó una matriz de sustitución posición específica (PSSM). Las PSSM son una clase de matrices de puntuación que BLAST emplea en sus búsquedas y en las cuales cada valor de sustitución de aminoácidos es dado por separado para cada posición en un alimneamiento múltitple. Esto contrasta con las matrices de posición independiente, tales como <em>PAM</em> y <em>BLOSUM</em>.[3]</p>
+<p>Las valores de las matrices generalmente son enteros positivos o negativos. Estos indican que para un aminoácido dado, las sustituciones en el alineamiento ocurren más o menos frecuentemente de los esperado por azar. Los valores positivos muy altos suelen indicar resiudos funcionales muy importantes, los cuales pueden ser sitios activos o tener alguna otra función de interacción molecular.[3]</p>
+<p>Para correr el BLAST en la terminal y generar la PSSM se empleó el siguiente comando:</p>
+<pre class="bash"><code>psiblast -query P1.faa -db nr -num_iterations 3 -out_ascii_pssm P1.pssm -save_pssm_after_last_round -num_threads 6`</code></pre>
+<p>Al final se obtuvo una matriz de dimensiones <span class="math inline">\(40\)</span> por <span class="math inline">\(86\)</span>. Las primeras <span class="math inline">\(20\)</span> columnas corresponden a la PSSM y otras <span class="math inline">\(20\)</span> indica pesos relativos de coincidencias por resiudo y posición en el alineamiento. Los <span class="math inline">\(86\)</span> renglones pertenecen a los residuos de 1GKH.</p>
+</div>
+<div id="extraccion-de-contenido-de-la-matriz-con-r" class="section level3">
+<h3>4.2 Extracción de contenido de la matriz con R</h3>
+<pre class="r"><code>pssm_file &lt;- &quot;./data/P1.pssm&quot;
+pssm_data &lt;- read_lines(pssm_file,skip = 2, skip_empty_rows = TRUE) %&gt;% 
+  str_trim(side = &quot;left&quot;) %&gt;% head(-5) %&gt;%
+  str_split(pattern = BLANK) %&gt;% map(.f = ~ .[(. != &quot;&quot;)])
+names_ &lt;- c(pssm_data[[1]]) 
+
+matrix_pssm &lt;- map(pssm_data[-1], .f = ~ as.numeric(.[-c(1,2, length(.) - c(0,1))])) %&gt;%
+  do.call(what = rbind) %&gt;% `colnames&lt;-`(names_)
+
+head(matrix_pssm[,1:20], n=10)</code></pre>
+<pre><code>       A  R  N  D  C  Q  E  G  H  I  L  K  M  F  P  S  T  W  Y  V
+ [1,] -5 -5 -6 -7 -5 -4 -6 -6 -5 -2  1 -5 11 -3 -6 -5 -4 -5 -5 -3
+ [2,] -3 -4 -3 -5 -4 -4 -3 -5 -4  3  3 -4  6 -2  0  1 -3 -4 -4  0
+ [3,] -1  1  1 -2 -4  0 -2 -2 -1  2 -2  5 -1 -4 -2  0  0 -5 -2 -1
+ [4,] -4 -6 -6 -6  1 -5 -6 -7 -3  6  0 -6  1 -1 -6 -5 -3 -5 -4  4
+ [5,] -2  3 -3 -2 -5  3  5 -4 -3 -2 -4  1 -3 -3 -4  1  1 -5 -4 -3
+ [6,] -3 -6 -6 -7 -4 -6 -6 -7 -7  7 -1 -6 -2 -1 -6 -5 -4 -6 -4  5
+ [7,] -2 -1  0 -1 -2 -1  2 -4 -2 -1  0  2  2  3 -1 -2  2 -3  0 -1
+ [8,]  0 -2  0 -1 -3  0  1 -3 -3  1 -2  0 -2 -3  3  2  0 -4 -3  2
+ [9,]  0  0 -1  1 -3  0  2 -1 -1 -2 -1  0 -1 -1 -2  2  1 -3 -2  0
+[10,]  0 -2  2  4 -4  1  2 -2  3 -4 -4 -1 -2 -3 -1  2 -1 -4 -3 -3</code></pre>
+</div>
+<div id="heatmap-de-matriz" class="section level3">
+<h3>4.3 Heatmap de matriz</h3>
+<pre class="r"><code>heatmap(matrix_pssm[,1:20])</code></pre>
+<div class="figure" style="text-align: center">
+<img src="tarea2_files/figure-html/heatmap_pssm_matrix-1.png" alt="**Figure 3.** Heatmap with the amino acid values by position, we observe the heterogeneity of values in different positions of the sequence" width="672" />
+<p class="caption">
+<strong>Figure 3.</strong> Heatmap with the amino acid values by position, we observe the heterogeneity of values in different positions of the sequence
+</p>
+</div>
+</div>
+</div>
+<div id="prediccion-de-estructura-secundaria-con-psipred" class="section level2">
+<h2>5. Predicción de estructura secundaria con PSIPRED</h2>
+<p>Para continuar con la predicción de estructuras secundarias de esta macromoléculas se empleó <strong>PSIPRED</strong>, un algoritmo predictor de estructura protéica diseñado por David T. Jones <em>et al</em> en 1999[4]. La idea de este método es usar la información de las proteínas relacionadas evolutivamente para predecir la estructura secundaria. Éste se basa en una red neuronal de dos estados que predice la estructura de la secuencia problema empleando matrices de sustitución PSSM.</p>
+<p>Este método se divide en tres etapas:</p>
+<ol style="list-style-type: decimal">
+<li>Generación de un perfil de secuencias, por medio de PSI-BLAST:
+<ul>
+<li>Para generar un perfil se emplea a PSI-BLAST, ya que es un súmamente sensible en comparación de secuencias y puede detectar homólogos distantes de la secuencias problema. La PSSM resultante contiene los valores de los <em>log-odds</em>. Como ya se mencionó antes, estas matrices tienen dimensiones de <span class="math inline">\(20 * M\)</span>, donde <span class="math inline">\(M\)</span> es el tamaño de la secuencia, y cada elemento representa el <em>log-likelihood</em> de una sustitución nucleotídica particular en la posición del templado.</li>
+</ul></li>
+<li>Predicción de la estructura secundaria inicial:
+<ul>
+<li>Se toma esta matriz y se le aplica una función para escalar los valores a un rango entre 0-1, después usa la primera red neuronal para predecir la estructura secundaria inicial y de ésta se obtienen 3 posibles salidas: <code>&quot;E&quot;, &quot;H&quot; o &quot;C&quot;</code>.</li>
+</ul></li>
+<li>Filtrado de la estructurlibrary(stringr) library(rebus)a predicha:
+<ul>
+<li>La segunda red neuronal se utiliza para filtrar la estructura predicha por la primera red. Al final se obtienen puntuaciones para cada elemento de la estructura secundaria, el puntaje más alto determina el cómo se clasificará al residuo aminoácido (si será “E”, “H” o “C”).</li>
+</ul></li>
+</ol>
+<div class="figure" style="text-align: center">
+<img src="tarea2_files/figure-html/psipred_prediction-1.png" alt="**Figure 4.**  _Graphic results of the prediction with PSIPRED_" width="672" />
+<p class="caption">
+<strong>Figure 4.</strong> <em>Graphic results of the prediction with PSIPRED</em>
+</p>
+</div>
+</div>
+<div id="creacion-de-alineamiento-multi-fasta" class="section level2">
+<h2>6. Creación de alineamiento multi-fasta</h2>
+<ul>
+<li>Unión de datos de 1GKG:
+<ul>
+<li>Fasta de Aminoácidos.</li>
+<li>Fasta de estructuras predichas por nuestro Ramachandran.</li>
+<li>Fasta de estructuras predichas por algoritmo de PSIPRED.</li>
+</ul></li>
+</ul>
+<p><code>Nota. La unión de los fasta fue realizada a mano.</code> <code>Espacios vacíos de secuencia número 2 fueron rellenados con &quot;-&quot;.</code></p>
+<pre class="bash"><code>cat ./data/secondary_structure_merge.txt</code></pre>
+<pre><code>&gt;1GKH_aa_seq
+MIKVEIKPSQAQFTTRSGVSRQGKPYSLNEQLCYVDLGNEYPVLVKITLDEGQPAYAPGLYTVHLSSFHVGQFGSLMIDRLRLVPA
+&gt;1GKH_ramachandran
+-EEEEEEHHEHEEEEEECEEHECEEEEEEEEEEEEEECHHEEEEEEEEEEECEEEEEECEEEEEHHHEEEEHECEEEEHEEEEEE-
+&gt;1GKH_PSIPRED_prediction
+CEEEEEECCCEEEEEEEEECCCCCCEEEEEEEEEEECCCCCCEEEEEECCCCCCCCCCEEEEECCCCEEECCCCCEEECCEEEEEC</code></pre>
+</div>
+<div id="calculo-de-porcentaje-de-identidad-entre-predictores." class="section level2">
+<h2>7. Cálculo de porcentaje de identidad entre predictores.</h2>
+<p>Para evaluar qué tan similares son los resultados de Ramachandran contra la estructura predicha por PSIPRED, se escribió un programa que determina el porcentaje de identidad de las secuencias de estructura secundaria.</p>
+<p><details><summary>Mostrar código</summary></p>
+<pre class="python"><code>import sys
+def amounts_of_shared_structures(known, predict, show_percentage = True):
+    assert len(known) == len(predict)
+    
+    shared_amounts = {&#39;E&#39;: 0, &#39;C&#39;: 0, &#39;H&#39;: 0}
+    for structure1, structure2 in zip(known, predict):
+        if structure1 == structure2:
+            try:
+                shared_amounts[structure1] += 1
+            except KeyError as error:
+                if structure1 != &#39;-&#39;:
+                    raise ValueError(error)
+    
+    if show_percentage:
+        # Side Effect.
+        total = sum(shared_amounts.values()) * 100 / len(known)
+        print(&quot;General identity percentage: {}%&quot;.format(total))
+        for key, value in shared_amounts.items():
+            try:
+                print(&#39;Itentity percentage of {}: {}%&#39;.format(key, value * 100 / predict.count(key)))
+            except ZeroDivisionError:
+                print(&quot;Identity percentage of {}: 0.0%&quot;.format(key))
+    
+    return(shared_amounts)
+  
+# Run function with our sequences.
+sequences_file = sys.argv[1]
+with open(sequences_file, &quot;r&quot;) as f:
+  lines = f.readlines()
+  known, predict = lines[3].strip(&#39;\n&#39;), lines[5].strip(&#39;\n&#39;)
+amounts_of_shared_structures(known, predict, show_percentage = True)</code></pre>
+<p></details></p>
+<pre class="bash"><code>python ./code/calculate_percentage_identity.py ./data/secondary_structure_merge.txt</code></pre>
+<pre><code>Global identity percentage: 56.97674418604651%
+Itentity percentage of C: 10.526315789473685%
+Identity percentage of H: 0.0%
+Itentity percentage of E: 93.75%</code></pre>
+<p>Como se puede observar el nivel de identidad de las secuencias en cuanto a las <span class="math inline">\(\beta\)</span>-sheets es muy alto, únicamente diferen un poco en la posición exacta en la que inicia y terminan, mientras que los loops diferen mucho entre ambos modelos. Otro punto importante es que PSIPRED no mostró ningún residuo de <span class="math inline">\(\alpha\)</span>-helice en sus resultados, mientras que en Ramachandran podemos encontrar secuencias de hasta un residuo de longitud identificado como <span class="math inline">\(\alpha\)</span>-helices. De manera general, la predicción de PSIPRED es mucho más parecida a lo observado en la estructura de Protein Data Bank (<strong>Figure 1</strong>).</p>
+</div>
+<div id="referencias" class="section level2">
+<h2>8. Referencias</h2>
+<p>[1]<a href="https://www.rcsb.org/structure/1GKH" class="uri">https://www.rcsb.org/structure/1GKH</a></p>
+<p>[2]H.M. Berman, J. Westbrook, Z. Feng, G. Gilliland, T.N. Bhat, H. Weissig, I.N. Shindyalov, P.E. Bourne. (2000) The Protein Data Bank Nucleic Acids Research, 28: 235-242.</p>
+<p>[3]<a href="https://www.ncbi.nlm.nih.gov/Class/Structure/pssm/pssm_viewer.cgi" class="uri">https://www.ncbi.nlm.nih.gov/Class/Structure/pssm/pssm_viewer.cgi</a></p>
+<p>[4] Jones, David T. (17 September 1999). Protein Secondary Structure Prediction Based on Position-specific Scoring Matrices, Journal of Molecular Biology. 292 (2): 195-202.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
