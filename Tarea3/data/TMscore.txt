@@ -1,0 +1,24 @@
+
+ *****************************************************************************
+ * TM-align (Version 20160521): A protein structural alignment algorithm     *
+ * Reference: Y Zhang and J Skolnick, Nucl Acids Res 33, 2302-9 (2005)       *
+ * Please email your comments and suggestions to Yang Zhang (zhng@umich.edu) *
+ *****************************************************************************
+
+Name of Chain_1: ./data/P1.pdb (to be superimposed onto Chain_2)
+Name of Chain_2: ./data/P1_Modeller.pdb
+Length of Chain_1: 86 residues
+Length of Chain_2: 86 residues
+
+Aligned length= 86, RMSD=   0.82, Seq_ID=n_identical/n_aligned= 1.000
+TM-score= 0.94846 (if normalized by length of Chain_1, i.e., LN=86, d0=3.33)
+TM-score= 0.94846 (if normalized by length of Chain_2, i.e., LN=86, d0=3.33)
+(You should use TM-score normalized by length of the reference protein)
+
+(":" denotes residue pairs of d <  5.0 Angstrom, "." denotes other aligned residues)
+MIKVEIKPSQAQFTTRSGVSRQGKPYSLNEQLCYVDLGNEYPVLVKITLDEGQPAYAPGLYTVHLSSFHVGQFGSLMIDRLRLVPA
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+MIKVEIKPSQAQFTTRSGVSRQGKPYSLNEQLCYVDLGNEYPVLVKITLDEGQPAYAPGLYTVHLSSFHVGQFGSLMIDRLRLVPA
+
+
+Total running time is  0.01 seconds
