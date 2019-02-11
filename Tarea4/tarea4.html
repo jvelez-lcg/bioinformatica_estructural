@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Salazar Medina Diana, Vélez Santiago Jesús" />
+
+
+<title>Bioinformática Estructural</title>
+
+<script src="tarea4_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="tarea4_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="tarea4_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="tarea4_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="tarea4_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="tarea4_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="tarea4_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="tarea4_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="tarea4_files/navigation-1.1/tabsets.js"></script>
+<link href="tarea4_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="tarea4_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4,h5",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Bioinformática Estructural</h1>
+<h3 class="subtitle"><em>Tarea 4</em></h3>
+<h4 class="author"><em>Salazar Medina Diana, Vélez Santiago Jesús</em></h4>
+<h4 class="date"><em>11 de febrero de 2019</em></h4>
+
+</div>
+
+
+<div id="mutaciones-puntuales-en-proteinas" class="section level2">
+<h2>1. Mutaciones puntuales en proteínas</h2>
+<p>El interés por predecir la estructura terciara de proteínas con mutaciones puntuales ha crecido desde que el mundo entró a la era de los <em>“Omicas”</em>. Ahora es posible conocer millones de fenotipos moleculares (tales como los SNPs) y es válido preguntarse cómo luciría la estructura secundaria de estos; <em>¿cuál es el impacto de una mutación en alguna posición de la estructura protéica? Si existe un cambio en la estructura, ¿de qué forma afecta a la función?</em></p>
+<p>Para observar de manera gráfica los efectos en la estructura que pueden tener las mutaciones puntuales en las proteínas variamos la secuencia de P1 en 6 sitios distintos, es decir, generamos seis “alelos” o “mutaciones”.</p>
+<div id="creacion-de-fastas-de-las-mutaciones." class="section level3">
+<h3>1.1 Creación de fastas de las mutaciones.</h3>
+<p>Los encabezados de los fastas se fabricaron de tal forma que diera la información siguiente: Nombre de la proteína (1GKH), número de alelo, código y posición del aminoácido mutado y finalmente aminoácido que lo sustituyó.</p>
+<pre class="bash"><code>cat ./seq_1gkh_*</code></pre>
+<pre><code>&gt;1GKH_a1_R21_to_G
+MIKVEIKPSQAQFTTRSGVSGQGKPYSLNEQLCYVDLGNEYPVLVKITLDEGQPAYAPGLYTVHLSSFHVGQFGSLMIDRLRLVPA
+&gt;1GKH_a2_F13_to_G
+MIKVEIKPSQAQGTTRSGVSRQGKPYSLNEQLCYVDLGNEYPVLVKITLDEGQPAYAPGLYTVHLSSFHVGQFGSLMIDRLRLVPA
+&gt;1GKH_a3_V35_to_D
+MIKVEIKPSQAQFTTRSGVSRQGKPYSLNEQLCYDDLGNEYPVLVKITLDEGQPAYAPGLYTVHLSSFHVGQFGSLMIDRLRLVPA
+&gt;1GKH_a4_S67_to_P
+MIKVEIKPSQAQFTTRSGVSRQGKPYSLNEQLCYVDLGNEYPVLVKITLDEGQPAYAPGLYTVHLSPFHVGQFGSLMIDRLRLVPA
+&gt;1GKH_a5_E5_to_P
+MIKVPIKPSQAQFTTRSGVSRQGKPYSLNEQLCYVDLGNEYPVLVKITLDEGQPAYAPGLYTVHLSSFHVGQFGSLMIDRLRLVPA
+&gt;1GKH_a6_P23_to_G;A55_to_P
+MIKVEIKPSQAQFTTRSGVSRQGKGYSLNEQLCYVDLGNEYPVLVKITLDEGQPPYAPGLYTVHLSSFHVGQFGSLMIDRLRLVPA
+&gt;1GKH_wildtype
+MIKVEIKPSQAQFTTRSGVSRQGKPYSLNEQLCYVDLGNEYPVLVKITLDEGQPAYAPGLYTVHLSSFHVGQFGSLMIDRLRLVPA</code></pre>
+</div>
+</div>
+<div id="importancia-de-las-mutaciones-con-pssm-a-traves-de-los-pesos-evolutivos." class="section level2">
+<h2>2. Importancia de las mutaciones con PSSM a través de los pesos evolutivos.</h2>
+<div id="lectura-de-matriz" class="section level3">
+<h3>2.1 Lectura de matriz</h3>
+<pre class="r"><code>library(tidyverse)
+library(stringr)
+library(rebus)
+
+pssm_file &lt;- &quot;./P1.pssm&quot;
+pssm_data &lt;- read_lines(pssm_file,skip = 2, skip_empty_rows = TRUE) %&gt;% 
+  str_trim(side = &quot;left&quot;) %&gt;% head(-5) %&gt;%
+  str_split(pattern = BLANK) %&gt;% map(.f = ~ .[(. != &quot;&quot;)])
+names_ &lt;- c(pssm_data[[1]]) 
+
+numeric_data &lt;- map(pssm_data[-1], .f = ~ as.numeric(.[-c(1,2, length(.) - c(0,1))])) %&gt;%
+  do.call(what = rbind) %&gt;% `colnames&lt;-`(names_)
+
+mutations_pos &lt;- c(21, 13, 35, 67, 5, 23, 55)
+sustitutions_pos &lt;- c(2,14,20,16,7,15,1)
+
+numeric_data[mutations_pos, 1:20]</code></pre>
+<pre><code>      A  R  N  D  C  Q  E  G  H  I  L  K  M  F  P  S  T  W  Y  V
+[1,] -1  3 -2 -2 -5 -1  0 -3 -3 -3 -5  6 -4 -5 -4 -2 -2 -5 -3 -4
+[2,] -1 -4 -2 -4  2 -3  0 -3 -4  3  0 -3 -1  0  1 -2  0 -4 -2  4
+[3,]  2 -4 -4 -5 -3 -4 -4 -2 -4  2  2 -4  1  0 -4 -3 -2  0 -1  3
+[4,]  1 -4 -1 -4  3 -3 -3 -2 -4 -5 -5 -3 -2 -2 -2  6  0 -6 -3 -4
+[5,] -2  3 -3 -2 -5  3  5 -4 -3 -2 -4  1 -3 -3 -4  1  1 -5 -4 -3
+[6,] -2 -4  0  3 -5 -1 -3  6 -2 -6 -6 -2 -1 -6 -5 -2 -1 -5 -5 -5
+[7,]  2 -2 -3 -2 -1 -3 -2  0 -2 -2 -2 -2 -1  0  6 -2 -2 -4 -2  1</code></pre>
+<p>Observando la matriz sabemos que los cambios ocurren de la forma:</p>
+<p>a1: R21 con un valor de 3, por G, con un valor de -3</p>
+<p>a2: F13 con un valor de 0, por G, con un valor de -3</p>
+<p>a3: V35 con un valor de 3, por D, con un valor de -5</p>
+<p>a4: S67 con un valor de 6, por P, con un valor de -2</p>
+<p>a5: E5 con un valor de 5, por P, con un valor de -4</p>
+<p>a6-1: P23 con un valor de -5, por G, con un valor de 6</p>
+<p>a6-2: A55 con un valor de 2, por P, con un valor de 6</p>
+<p>Los alelos 3, 4, 5 y 6-2 presentan la mayor diferencia de puntuación. Esto quiere decir que se tomaron un conjunto de residuos que suelen ser estables a través del tiempo, quizás con papeles estructurales o funcionales importantes, para mutarlos y cambiarlos por residuos que no se encontrarán comunmente en esa posición. El caso del alelo 6-1 es un caso llamativo, ya que es un aminoácido cuyo valor en la matriz en negativo, lo que quiere decir que su frecuencia es muy baja y se le ha cambiado por un aminoácido cuya frecuencia es mucho mayor.</p>
+</div>
+</div>
+<div id="estructura-secundaria-con-stride" class="section level2">
+<h2>3. Estructura secundaria con STRIDE</h2>
+<p>Al hacer la asignación de estructura secundaria con <strong>STRIDE</strong>, se hace evidente que en algunos casos se han causado cambios que podrán tener repercusiones importantes en la estructura terciaria.</p>
+<div class="figure">
+<img src="1GKH_wt.gif" alt="Figura 1. Estructura secundaria de la proteína 1GKH-wildtype" />
+<p class="caption"><strong>Figura 1.</strong> Estructura secundaria de la proteína 1GKH-wildtype</p>
+</div>
+<div class="figure">
+<img src="1GKH_a3.gif" alt="Figura 2. Estructura secundaria del alelo 3, se nota que las láminas beta número 7 y 8 han perdido tamaáo, haciendo la región del loop que hay entre ellas dos resiudos más largas" />
+<p class="caption"><strong>Figura 2.</strong> Estructura secundaria del alelo 3, se nota que las láminas beta número 7 y 8 han perdido tamaáo, haciendo la región del loop que hay entre ellas dos resiudos más largas</p>
+</div>
+<div class="figure">
+<img src="1GKH_a4.gif" alt="Figura 3. Estructura secundaria del alelo 4, aquí se ha perdido por completo la estructura de hélice alfa que se encontraba formada por los resiudos 65 al 67, en su lugar, se ha extendido la región del loop" />
+<p class="caption"><strong>Figura 3.</strong> Estructura secundaria del alelo 4, aquí se ha perdido por completo la estructura de hélice alfa que se encontraba formada por los resiudos 65 al 67, en su lugar, se ha extendido la región del loop</p>
+</div>
+<div class="figure">
+<img src="1GKH_a5.gif" alt="Figura 4. Estructura secundaria del alelo 5, en la cual observamos un pequeño cambio en la tercer lámina beta, a lo cual lo denomina Isolated Beta Bridge" />
+<p class="caption"><strong>Figura 4.</strong> Estructura secundaria del alelo 5, en la cual observamos un pequeño cambio en la tercer lámina beta, a lo cual lo denomina “Isolated Beta Bridge”</p>
+</div>
+<p>De acuerdo a la figura 5.15 del material del curso, la prolina es el aminoácido que tiende a causar el mayor daño en estructuras como las <span class="math inline">\(\alpha\)</span>-hélices, debido a que causa traslapes que impiden el correcto plegamiento de una estrutura. Como se ve en la <em>figura 4</em>, al cambiar resiudo de <strong>serina</strong> por una <strong>prolina</strong></p>
+</div>
+<div id="visualizacion-con-foldit" class="section level2">
+<h2>4. Visualización con Foldit</h2>
+<p>Para obtener una mejor idea de cómo podrán estar interactuando los resiudos mutados con el resto de la estructura.</p>
+<p><code>Nota: Por el resto de la discusión se muestra sólo los resultados del alelo 4.</code> <code>El resto de resultados pueden ser visualizados en ./data/</code></p>
+<div class="figure" style="text-align: center">
+<img src="tarea4_files/figure-html/5-1.png" alt="**Figura 5.** Proteína 1GKH wildtype, se puede observar los resiudos formando un alfa hélice." width="672" />
+<p class="caption">
+<strong>Figura 5.</strong> Proteína 1GKH wildtype, se puede observar los resiudos formando un alfa hélice.
+</p>
+</div>
+<div class="figure" style="text-align: center">
+<img src="tarea4_files/figure-html/6-1.png" alt="**Figura 6.** Proteína 1GKH en su cuarta forma alélica, se observa que la alfa hélice de la secuencia original se transforma en un fragmento más similar al de un loop." width="672" />
+<p class="caption">
+<strong>Figura 6.</strong> Proteína 1GKH en su cuarta forma alélica, se observa que la alfa hélice de la secuencia original se transforma en un fragmento más similar al de un loop.
+</p>
+</div>
+<p>Con la mitad de los resultados de Foldit pasan cosas similares, es decir, la mutación causa un cambio en la estructura que termina siendo un cambio a nivel de interaccion con otros aminoácidos. La otra mitad no parece verse afectada por la mutacion puntual.</p>
+</div>
+<div id="contactos-entre-residuos" class="section level2">
+<h2>5. Contactos entre residuos:</h2>
+<p>Como última prueba se escribió un programa que calculara para cada mutante y la wildtype el número de contactos con los residuos vecinos en un radio de <span class="math inline">\(15 angstroms\)</span> (sin contar las interacciones de los hidrógenos). Para poner cada uno de estos contactos en contexto se calculó la distribución de los contactos de todos los residuos. <code>El siguiente código fue ejecutado manualmente para cada mutante.</code></p>
+<div id="obtencion-de-matrices-de-contacto-y-distancias." class="section level3">
+<h3>5.1 Obtencion de matrices de contacto y distancias.</h3>
+<p><details><summary>Mostrar código</summary></p>
+<pre class="python"><code>import numpy as np
+import pandas as pd
+import seaborn as sns
+from Bio.PDB import *
+import matplotlib.pyplot as plt
+def calc_dist_matrix(chain_one, chain_two) :
+    &quot;&quot;&quot;Returns a matrix of C-alpha distances between two chains&quot;&quot;&quot;
+    
+    def calc_residue_dist(residue_one, residue_two) :
+        &quot;&quot;&quot;Returns the C-alpha distance between two residues&quot;&quot;&quot;
+        diff_vector  = residue_one[&quot;CA&quot;].coord - residue_two[&quot;CA&quot;].coord
+        return np.sqrt(np.sum(diff_vector * diff_vector))
+    
+    answer = np.zeros((len(chain_one), len(chain_two)), np.float)
+    for row, residue_one in enumerate(chain_one) :
+        for col, residue_two in enumerate(chain_two) :
+            answer[row, col] = calc_residue_dist(residue_one, residue_two)
+    return answer
+def get_contact_matrix_of_residues1(chain_one, chain_two,distance) :
+    &quot;&quot;&quot;Returns a matrix of Contacts between two chains&quot;&quot;&quot;
+    
+    def at_least_one_atom_nearby(residue_one, residue_two,distance) :
+        &quot;&quot;&quot;Returns True if at least one pair of atoms between the residues is at a given distance.
+        Otherwise, return False.&quot;&quot;&quot;
+        for atom1 in residue_one.get_atoms():
+            for atom2 in residue_two.get_atoms():
+                atom_distance = np.sqrt(np.sum(np.power(atom1.coord - atom2.coord, 2)))
+                if atom_distance &lt; distance: return True
+        return False
+    
+    
+    answer = np.zeros((len(chain_one), len(chain_two)), np.int)
+    for row, residue_one in enumerate(chain_one) :
+        for col, residue_two in enumerate(chain_two) :
+            answer[row, col] = at_least_one_atom_nearby(residue_one, residue_two,distance)
+    np.fill_diagonal(answer,0)
+    return answer
+def get_contact_matrix_of_residues2(structure, distance):
+    atoms = Selection.unfold_entities(structure, &#39;A&#39;)
+    residues_neighbors = NeighborSearch(atoms).search_all(distance, &#39;R&#39;)
+    
+    num_residues = len(Selection.unfold_entities(structure, &#39;R&#39;))
+    contact_matrix = np.zeros((num_residues,num_residues), dtype = np.int)
+    for pair in residues_neighbors:
+        i, j = pair[0].get_id()[1]-1, pair[1].get_id()[1]-1
+        contact_matrix[i][j], contact_matrix[j][i] = 1, 1
+    return contact_matrix</code></pre>
+<p></details></p>
+</div>
+<div id="generacion-de-plots." class="section level3">
+<h3>5.2 Generación de plots.</h3>
+<p><details><summary>Mostrar código</summary></p>
+<pre class="python"><code>PDB_code = &#39;1GKH&#39;
+PDBfile = &#39;/home/jvelez/Documentos/4_semestre/bioinformatica/bioinformatica_estructural/code/files/Modeller_a5.pdb&#39;
+PDFfile = &#39;home/jvelez/Descargas/Modeller_wt.pdb&#39;
+label = &#39;wt&#39;
+parser = PDBParser()
+structure = parser.get_structure(PDB_code, PDBfile)
+model = structure[0]
+distance = 15
+names = [residue.get_resname() + &#39;_&#39; + str(residue.get_id()[1]) for residue in structure.get_residues()]
+# In[4]:
+# Using matrix of C-alpha distances.
+dist_matrix = calc_dist_matrix(model[&quot;X&quot;], model[&quot;X&quot;])
+contact_map = pd.DataFrame(dist_matrix &lt; distance)
+counts_map = contact_map.sum().to_frame(name = &quot;counts&quot;)
+# Using contact matrix evaluated at a distance of 15 angstrons.
+contact_matrix = pd.DataFrame(get_contact_matrix_of_residues1(model[&quot;X&quot;], model[&quot;X&quot;], distance))
+counts_matrix = contact_matrix.sum().to_frame(name = &quot;counts&quot;)
+# Using Module of Bipython.
+contact_matrix_pdb = pd.DataFrame(get_contact_matrix_of_residues2(structure, distance))
+counts_matrix_pdb = contact_matrix_pdb.sum().to_frame(name = &quot;counts&quot;)
+# Both functions obtain the same results, as shown below.
+np.all(counts_matrix == counts_matrix_pdb)
+# Save C-alpha counts and any of the two last data counts in a single data.frame.
+counts_map[&#39;label&#39;], counts_matrix[&#39;label&#39;] = (&#39;C-alpha&#39;,&#39;Any Atom&#39;)
+counts_data = pd.concat([counts_map, counts_matrix])
+counts_data[&#39;n_residue&#39;] = range(0,len(counts_data.index))
+# In[5]:
+# Plot matrix of C-alpha distances between two chains.
+sns.set(rc={&#39;figure.figsize&#39;:(10,10)})
+plt.matshow(dist_matrix)
+plt.colorbar()
+plt.title(&#39;Contact Matrix Calculated from C-alpha distances&#39;, fontsize = 20)
+plt.savefig(&#39;distances_C_alpha_&#39;+label +&quot;.png&quot;)
+plt.show()
+# In[6]:
+plt.figure(figsize=(5,5))
+f, (ax1, ax2) = plt.subplots(1,2, sharey = True)
+ax1.imshow(contact_matrix, cmap=&quot;binary&quot;)
+ax1.set_title(&quot;Any atom contacts&quot;, fontsize = 20)
+ax2.imshow(contact_map, cmap=&quot;binary&quot;)
+ax2.set_title(&quot;Just C-Alpha contacts&quot;, fontsize=20)
+#f.suptitle(&#39;Matrix Contact Comparison between Any atom or Just Alpha Carbons&#39;, fontsize = 20)
+plt.savefig(&quot;combine_&quot; + label + &quot;.png&quot;, bbox_inches = &#39;tight&#39;, pad_inches = 0)
+# In[7]:
+sns.set(rc = {&#39;figure.figsize&#39;:(20,10)})
+f, (ax1, ax2) = plt.subplots(2,1, sharey = True)
+f.suptitle(&#39;Comparasion of distribution of residues&#39;, fontsize = 20)
+sns.set(rc = {&#39;figure.figsize&#39;:(20,10)})
+p = sns.barplot(x = counts_map.index.values, y = counts_map[&quot;counts&quot;],ax=ax1)
+p = p.set_xticklabels(p.get_xticklabels(),rotation = 90)
+plt.xlabel(&quot;Number of Residue&quot;)
+sns.set(rc = {&#39;figure.figsize&#39;:(20,10)})
+p = sns.barplot(x = names, y = counts_matrix[&quot;counts&quot;], ax=ax2)
+p = p.set_xticklabels(p.get_xticklabels(),rotation = 90)
+plt.xlabel(&quot;Number of Residue&quot;)
+plt.savefig(&#39;Comparasion_distribution_residues_&#39; + label +&#39;.png&#39;)
+# In[8]:
+sns.set(rc = {&#39;figure.figsize&#39;:(20,10)})
+p = sns.barplot(x = counts_data.index.values, y = &quot;counts&quot;, hue=&quot;label&quot;,data=counts_data)
+p = p.set_xticklabels(names,rotation = 90)
+plt.title(&#39;Distribution of residues number&#39;, fontsize = 20)
+plt.xlabel(&quot;Number of Residue&quot;)
+plt.savefig(&quot;distribution_residues_c_alpha_any_atom_&quot; + label +&quot;.png&quot;, bbox_inches = &#39;tight&#39;, pad_inches = 0)
+# In[9]:
+_, bins = np.histogram(counts_data[&quot;counts&quot;])
+p = sns.FacetGrid(counts_data, hue=&quot;label&quot;)
+p = p.map(sns.distplot, &quot;counts&quot;, bins=bins)
+p.fig.set_size_inches(10,10)
+plt.legend(prop={&#39;size&#39;: 20})
+plt.title(&#39;Distribution of Contacts&#39;,fontsize=20)
+plt.xlabel(&#39;Number of Counts&#39;,fontsize=20)
+plt.ylabel(&#39;Density&#39;,fontsize=20)
+plt.savefig(&quot;distrubition_&quot; + label + &quot;.png&quot;, bbox_inches = &#39;tight&#39;, pad_inches = 0)</code></pre>
+<p></details></p>
+<div class="figure" style="text-align: center">
+<img src="tarea4_files/figure-html/7-1.png" alt="**Figura 7.** Matriz de contactos con y sin contar carbonos alfa." width="672" />
+<p class="caption">
+<strong>Figura 7.</strong> Matriz de contactos con y sin contar carbonos alfa.
+</p>
+</div>
+<div class="figure" style="text-align: center">
+<img src="tarea4_files/figure-html/8-1.png" alt="**Figura 8.** Matriz de distancias completa, la cual describe la distancia a la que se encuentra cada residuo de otros." width="672" />
+<p class="caption">
+<strong>Figura 8.</strong> Matriz de distancias completa, la cual describe la distancia a la que se encuentra cada residuo de otros.
+</p>
+</div>
+<div class="figure" style="text-align: center">
+<img src="tarea4_files/figure-html/9-1.png" alt="**Figura 9.** Histograma de distribución de contactos, en los que se contrasta los valores para los contactos de cualquier átomo como los de los carbonos alfa." width="672" />
+<p class="caption">
+<strong>Figura 9.</strong> Histograma de distribución de contactos, en los que se contrasta los valores para los contactos de cualquier átomo como los de los carbonos alfa.
+</p>
+</div>
+<div class="figure" style="text-align: center">
+<img src="tarea4_files/figure-html/10-1.png" alt="**Figura 10.** Distribución del número de contactor por residuo en ambas condiciones." width="672" />
+<p class="caption">
+<strong>Figura 10.</strong> Distribución del número de contactor por residuo en ambas condiciones.
+</p>
+</div>
+<div class="figure" style="text-align: center">
+<img src="tarea4_files/figure-html/11-1.png" alt="**Figura 11.** Distribución del número de contactor por residuo en ambas condiciones." width="672" />
+<p class="caption">
+<strong>Figura 11.</strong> Distribución del número de contactor por residuo en ambas condiciones.
+</p>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
