@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Salazar Medina Diana, Vélez Santiago Jesús" />
+
+
+<title>Bioinformática Estructural</title>
+
+<script src="predictor_Kanhere_Bansal_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="predictor_Kanhere_Bansal_files/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<script src="predictor_Kanhere_Bansal_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="predictor_Kanhere_Bansal_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="predictor_Kanhere_Bansal_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="predictor_Kanhere_Bansal_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="predictor_Kanhere_Bansal_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="predictor_Kanhere_Bansal_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="predictor_Kanhere_Bansal_files/navigation-1.1/tabsets.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; } /* Keyword */
+code > span.dt { color: #dfdfbf; } /* DataType */
+code > span.dv { color: #dcdccc; } /* DecVal */
+code > span.bn { color: #dca3a3; } /* BaseN */
+code > span.fl { color: #c0bed1; } /* Float */
+code > span.ch { color: #dca3a3; } /* Char */
+code > span.st { color: #cc9393; } /* String */
+code > span.co { color: #7f9f7f; } /* Comment */
+code > span.ot { color: #efef8f; } /* Other */
+code > span.al { color: #ffcfaf; } /* Alert */
+code > span.fu { color: #efef8f; } /* Function */
+code > span.er { color: #c3bf9f; } /* Error */
+code > span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+code > span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code > span.sc { color: #dca3a3; } /* SpecialChar */
+code > span.vs { color: #cc9393; } /* VerbatimString */
+code > span.ss { color: #cc9393; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { } /* Variable */
+code > span.cf { color: #f0dfaf; } /* ControlFlow */
+code > span.op { color: #f0efd0; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code > span.at { } /* Attribute */
+code > span.do { color: #7f9f7f; } /* Documentation */
+code > span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code > span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code > span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4,h5",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Bioinformática Estructural</h1>
+<h3 class="subtitle"><em>Predictor D(n) de Kanhere y Bansal</em></h3>
+<h4 class="author"><em>Salazar Medina Diana, Vélez Santiago Jesús</em></h4>
+<h4 class="date"><em>11 de febrero de 2019</em></h4>
+
+</div>
+
+
+<div id="implementacion-de-algortimo-de-kanhere-y-bansal" class="section level2">
+<h2>1. Implementación de Algortimo de Kanhere y Bansal</h2>
+<div id="metodologia-de-kanhere-y-bansal" class="section level3">
+<h3>1.1 Metodología de Kanhere y Bansal</h3>
+<div class="figure" style="text-align: center">
+<img src="figures/flow_chart-1.png" alt="**Figura 1.**  Diagrama de flujo resumiendo la metodología de Kanhere y Bansal." width="1000" height="1000" />
+<p class="caption">
+<strong>Figura 1.</strong> Diagrama de flujo resumiendo la metodología de Kanhere y Bansal.
+</p>
+</div>
+</div>
+<div id="calculo-de-diferencia-energetica-dn" class="section level3">
+<h3>1.2 Cálculo de diferencia energética: D(n)</h3>
+<span class="math display">\[ D(n) = E1(n) - E2(n) \]</span> <span class="math display">\[ donde, \]</span> <span class="math display">\[  E1(n) = \frac{\sum_{n}^{n + \frac{s}{4}}\Delta G °}{\frac{s}{4}} \]</span> <span class="math display">\[  E1(n) = \frac{\sum_{n+\frac{s}{2}}^{n + s}\Delta G °}{\frac{s}{2}} \]</span> <span class="math display">\[ s \bmod 4 = 0,  s \in N^+ \]</span> <span class="math display">\[   \]</span>
+<div class="figure" style="text-align: center">
+<img src="figures/diagram-1.png" alt="**Figure 2.**  Diagrama de flujo resumiendo la metodología de Kanhere y Bansal." width="1000" height="1000" />
+<p class="caption">
+<strong>Figure 2.</strong> Diagrama de flujo resumiendo la metodología de Kanhere y Bansal.
+</p>
+</div>
+</div>
+<div id="implementacion" class="section level3">
+<h3>1.3 Implementación</h3>
+<p><details><summary>Mostrar código</summary></p>
+<div class="sourceCode"><pre class="sourceCode perl"><code class="sourceCode perl"><span class="kw">#!/usr/bin/perl -w</span>
+<span class="co"># V1.0</span>
+<span class="co"># Nearest Neighbor dG calculator.</span>
+<span class="co"># Salazar Diana, Velez Jesus.</span>
+<span class="co"># dsalazar@lcg.unam.mx, jvelez@lcg.unam.mx</span>
+
+<span class="co"># Returns:</span>
+<span class="co">#   Print the following data in tabular format and if a field contains more than one value, these will be separated by a comma.</span>
+<span class="co">#   seq_name    dGs positive_index  energy_difference   starts  ends    type_segment    tag</span>
+<span class="co">#   </span>
+
+<span class="co"># Examples of use:</span>
+<span class="co"># perl nearest_neighbor_dG_calculator.pl -i data/K12_400_50_sites -t 37 -w 15 -s 200 -o 25 -c 3.4,-15.99 -r -400,50 -d -200,50 -e test1</span>
+<span class="co"># perl nearest_neighbor_dG_calculator.pl --inputfile data/K12_400_50_sites --temperature 37 --window_length 15 --size_compare 200 --size_overlap 25 --cutoffs 3.4,-15.99 --region_seq -400,50 --delimited_region -200,50 --experiment_tag test1</span>
+<span class="co"># Combinations of short or long forms of parameters are also valid.</span>
+<span class="co"># Notes:</span>
+<span class="co">#   For now there are no default values so all must be specified.</span>
+<span class="co">#   All the necessary validations have not been verified so you should be careful in the parameters that you enter make sense.</span>
+
+<span class="fu">use</span> <span class="kw">strict</span>;
+<span class="fu">use</span> <span class="fu">List::Util</span> <span class="kw">qw(</span>sum<span class="kw">)</span>;
+<span class="fu">use</span> <span class="fu">Getopt::Mixed</span>;
+
+<span class="fu">Getopt::Mixed</span>::<span class="fu">init</span>(
+ <span class="kw">&quot;</span><span class="st">i=s t=i w=i s=i o=i c=s r=s d=s e=s</span>
+<span class="st"> inputfile&gt;i temperature&gt;t window_length&gt;w size_compare&gt;s size_overlap&gt;o cutoffs&gt;c region_seq&gt;r delimited_region&gt;d tag&gt;e</span><span class="kw">&quot;</span>);
+<span class="kw">my</span> (<span class="dt">$infile</span>, <span class="dt">$T</span>, <span class="dt">$windowL</span>, <span class="dt">$size_of_seqs_to_compare</span>, <span class="dt">$size_overlap</span>, <span class="dt">@cutoffs</span>, <span class="dt">@region_of_seq</span>, <span class="dt">@delim_region_to_check</span>, <span class="dt">$experiment_tag</span>);
+<span class="kw">while</span>( <span class="kw">my</span>( <span class="dt">$option</span>, <span class="dt">$value</span>, <span class="dt">$pretty</span> ) = <span class="fu">Getopt::Mixed</span>::<span class="fu">nextOption</span>())
+{
+    OPTION: {
+      <span class="dt">$option</span> <span class="kw">eq</span> <span class="kw">&#39;</span><span class="st">i</span><span class="kw">&#39;</span> <span class="kw">and</span> <span class="kw">do</span> {
+        <span class="dt">$infile</span> = <span class="dt">$value</span>;
+        <span class="kw">last</span> OPTION;
+      };
+      <span class="dt">$option</span> <span class="kw">eq</span> <span class="kw">&#39;</span><span class="st">t</span><span class="kw">&#39;</span> <span class="kw">and</span> <span class="kw">do</span> {
+        <span class="dt">$T</span> = <span class="dt">$value</span>;
+        <span class="kw">last</span> OPTION;
+      };
+      <span class="dt">$option</span> <span class="kw">eq</span> <span class="kw">&#39;</span><span class="st">w</span><span class="kw">&#39;</span> <span class="kw">and</span> <span class="kw">do</span> {
+        <span class="dt">$windowL</span> = <span class="dt">$value</span>;
+        <span class="fu">die</span> <span class="kw">&quot;</span><span class="st">Window Size must be greater or equal to 1.</span><span class="kw">&quot;</span> <span class="kw">if</span> <span class="dt">$windowL</span> &lt; <span class="dv">1</span>;
+        <span class="kw">last</span> OPTION;
+      };
+      <span class="dt">$option</span> <span class="kw">eq</span> <span class="kw">&#39;</span><span class="st">s</span><span class="kw">&#39;</span> <span class="kw">and</span> <span class="kw">do</span> {
+        <span class="dt">$size_of_seqs_to_compare</span> = <span class="dt">$value</span>;
+        <span class="fu">die</span> <span class="kw">&quot;</span><span class="st">Size of sequence to compare must be greater or equal to 1.</span><span class="kw">&quot;</span> <span class="kw">if</span> <span class="dt">$size_of_seqs_to_compare</span> &lt; <span class="dv">1</span>;
+        <span class="kw">last</span> OPTION;
+      };
+      <span class="dt">$option</span> <span class="kw">eq</span> <span class="kw">&#39;</span><span class="st">o</span><span class="kw">&#39;</span> <span class="kw">and</span> <span class="kw">do</span> {
+        <span class="dt">$size_overlap</span> = <span class="dt">$value</span>;
+        <span class="fu">die</span> <span class="kw">&quot;</span><span class="st">Size of overlap must be greater or equal to 1.</span><span class="kw">&quot;</span> <span class="kw">if</span> <span class="dt">$size_overlap</span> &lt; <span class="dv">1</span>;
+        <span class="kw">last</span> OPTION;
+      };
+      <span class="dt">$option</span> <span class="kw">eq</span> <span class="kw">&#39;</span><span class="st">c</span><span class="kw">&#39;</span> <span class="kw">and</span> <span class="kw">do</span> {
+        <span class="dt">@cutoffs</span> = <span class="fu">split</span>(<span class="kw">/</span><span class="ot">\,</span><span class="kw">/</span>,<span class="dt">$value</span>);
+        <span class="fu">die</span> <span class="kw">&quot;</span><span class="st">Cutoffs array must be of length 2.</span><span class="kw">&quot;</span> <span class="kw">if</span> (<span class="dt">@cutoffs</span> != <span class="dv">2</span>);
+        <span class="kw">last</span> OPTION;
+      };
+      <span class="dt">$option</span> <span class="kw">eq</span> <span class="kw">&#39;</span><span class="st">r</span><span class="kw">&#39;</span> <span class="kw">and</span> <span class="kw">do</span> {
+        <span class="dt">@region_of_seq</span> = <span class="fu">split</span>(<span class="kw">/</span><span class="ot">\,</span><span class="kw">/</span>,<span class="dt">$value</span>);
+        <span class="fu">die</span> <span class="kw">&quot;</span><span class="st">Region array must be of length 2.</span><span class="kw">&quot;</span> <span class="kw">if</span> (<span class="dt">@region_of_seq</span> != <span class="dv">2</span>);
+        <span class="fu">die</span> <span class="kw">&quot;</span><span class="st">Region of sequence: First region must be lower than second one.</span><span class="kw">&quot;</span> <span class="kw">if</span> (<span class="dt">$region_of_seq</span>[<span class="dv">0</span>] &gt; <span class="dt">$region_of_seq</span>[<span class="dv">1</span>]);
+        <span class="kw">last</span> OPTION;
+      };
+      <span class="dt">$option</span> <span class="kw">eq</span> <span class="kw">&#39;</span><span class="st">d</span><span class="kw">&#39;</span> <span class="kw">and</span> <span class="kw">do</span> {
+        <span class="dt">@delim_region_to_check</span> = <span class="fu">split</span>(<span class="kw">/</span><span class="ot">\,</span><span class="kw">/</span>,<span class="dt">$value</span>);
+        <span class="fu">die</span> <span class="kw">&quot;</span><span class="st">Region array must be of length 2.</span><span class="kw">&quot;</span> <span class="kw">if</span> (<span class="dt">@delim_region_to_check</span> != <span class="dv">2</span>);
+        <span class="fu">die</span> <span class="kw">&quot;</span><span class="st">Delim region to check: First region must be lower than second one.</span><span class="kw">&quot;</span> <span class="kw">if</span> (<span class="dt">$delim_region_to_check</span>[<span class="dv">0</span>] &gt; <span class="dt">$delim_region_to_check</span>[<span class="dv">1</span>]);
+        <span class="kw">last</span> OPTION;
+      };
+      <span class="dt">$option</span> <span class="kw">eq</span> <span class="kw">&#39;</span><span class="st">e</span><span class="kw">&#39;</span> <span class="kw">and</span> <span class="kw">do</span> {
+        <span class="dt">$experiment_tag</span> = <span class="dt">$value</span>;
+        <span class="kw">last</span> OPTION;
+      }
+    }
+};
+<span class="fu">Getopt::Mixed</span>::<span class="fu">cleanup</span>();
+
+<span class="fu">print</span> <span class="kw">&quot;</span><span class="st"># Parameters:</span><span class="ch">\n</span><span class="kw">&quot;</span>;
+<span class="fu">print</span> <span class="kw">&quot;</span><span class="st"># Local date and time: </span><span class="kw">&quot;</span> . <span class="fu">localtime</span>() . <span class="kw">&quot;</span><span class="ch">\n</span><span class="kw">&quot;</span>;
+<span class="fu">print</span> <span class="kw">&quot;</span><span class="st"># Input file: </span><span class="dt">$infile</span><span class="ch">\n</span><span class="kw">&quot;</span>;
+<span class="fu">print</span> <span class="kw">&quot;</span><span class="st"># Temperature = </span><span class="dt">$T</span><span class="st">°C</span><span class="ch">\t</span><span class="st">Window Size = </span><span class="dt">$windowL</span><span class="ch">\n</span><span class="kw">&quot;</span>;
+<span class="fu">print</span> <span class="kw">&quot;</span><span class="st"># Size of sequence to compare = </span><span class="dt">$size_of_seqs_to_compare</span><span class="ch">\t</span><span class="st">Size of Overlaping to check = </span><span class="dt">$size_overlap</span><span class="ch">\n</span><span class="kw">&quot;</span>;
+<span class="fu">print</span> <span class="kw">&quot;</span><span class="st"># Cut-off of DeltaGs = </span><span class="dt">$cutoffs</span><span class="st">[0]</span><span class="ch">\t</span><span class="st">Cut-off of E1 = </span><span class="dt">$cutoffs</span><span class="st">[1]</span><span class="ch">\n</span><span class="kw">&quot;</span>;
+<span class="fu">print</span> <span class="kw">&quot;</span><span class="st"># Sequence region = </span><span class="dt">$region_of_seq</span><span class="st">[0]:</span><span class="dt">$region_of_seq</span><span class="st">[1]</span><span class="ch">\n</span><span class="kw">&quot;</span>;
+<span class="fu">print</span> <span class="kw">&quot;</span><span class="st"># Region to check for true positives = </span><span class="dt">$delim_region_to_check</span><span class="st">[0]:</span><span class="dt">$delim_region_to_check</span><span class="st">[1]</span><span class="ch">\n</span><span class="kw">&quot;</span>;
+<span class="fu">print</span> <span class="fu">join</span>(<span class="kw">&quot;</span><span class="ch">\t</span><span class="kw">&quot;</span>,(<span class="kw">&quot;</span><span class="st">seq_name</span><span class="kw">&quot;</span>,<span class="kw">&quot;</span><span class="st">dGs</span><span class="kw">&quot;</span>,<span class="kw">&quot;</span><span class="st">positive_index</span><span class="kw">&quot;</span>, <span class="kw">&quot;</span><span class="st">energy_difference</span><span class="kw">&quot;</span>,<span class="kw">&quot;</span><span class="st">starts</span><span class="kw">&quot;</span>,<span class="kw">&quot;</span><span class="st">ends</span><span class="kw">&quot;</span>,<span class="kw">&quot;</span><span class="st">type_segment</span><span class="kw">&quot;</span>,<span class="kw">&quot;</span><span class="st">tag</span><span class="kw">&quot;</span>)) . <span class="kw">&quot;</span><span class="ch">\n</span><span class="kw">&quot;</span>;
+
+<span class="kw">my</span> <span class="dt">%NNparams</span>    = ( 
+    <span class="co"># SantaLucia J (1998) PNAS 95(4): 1460-1465.</span>
+    <span class="co"># [NaCl] 1M, 37C &amp; pH=7 </span>
+    <span class="co"># H(enthalpy): kcal/mol , S(entropy): cal/k�mol</span>
+    <span class="co"># stacking dinucleotides</span>
+    <span class="kw">&#39;</span><span class="st">AA/TT</span><span class="kw">&#39;</span> , {<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>,-<span class="fl">7.9</span>, <span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>,-<span class="fl">22.2</span>},
+    <span class="kw">&#39;</span><span class="st">AT/TA</span><span class="kw">&#39;</span> , {<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>,-<span class="fl">7.2</span>, <span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>,-<span class="fl">20.4</span>},
+    <span class="kw">&#39;</span><span class="st">TA/AT</span><span class="kw">&#39;</span> , {<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>,-<span class="fl">7.2</span>, <span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>,-<span class="fl">21.3</span>},
+    <span class="kw">&#39;</span><span class="st">CA/GT</span><span class="kw">&#39;</span> , {<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>,-<span class="fl">8.5</span>, <span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>,-<span class="fl">22.7</span>},
+    <span class="kw">&#39;</span><span class="st">GT/CA</span><span class="kw">&#39;</span> , {<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>,-<span class="fl">8.4</span>, <span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>,-<span class="fl">22.4</span>},
+    <span class="kw">&#39;</span><span class="st">CT/GA</span><span class="kw">&#39;</span> , {<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>,-<span class="fl">7.8</span>, <span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>,-<span class="fl">21.0</span>},
+    <span class="kw">&#39;</span><span class="st">GA/CT</span><span class="kw">&#39;</span> , {<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>,-<span class="fl">8.2</span>, <span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>,-<span class="fl">22.2</span>},
+    <span class="kw">&#39;</span><span class="st">CG/GC</span><span class="kw">&#39;</span> , {<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>,-<span class="fl">10.6</span>,<span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>,-<span class="fl">27.2</span>},
+    <span class="kw">&#39;</span><span class="st">GC/CG</span><span class="kw">&#39;</span> , {<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>,-<span class="fl">9.8</span>, <span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>,-<span class="fl">24.4</span>},
+    <span class="kw">&#39;</span><span class="st">GG/CC</span><span class="kw">&#39;</span> , {<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>,-<span class="fl">8.0</span>, <span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>,-<span class="fl">19.9</span>},
+    <span class="co"># initiation costs</span>
+    <span class="kw">&#39;</span><span class="st">G</span><span class="kw">&#39;</span>     , {<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>, <span class="fl">0.1</span>, <span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>,-<span class="fl">2.8</span> },
+    <span class="kw">&#39;</span><span class="st">A</span><span class="kw">&#39;</span>     , {<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>, <span class="fl">2.3</span>, <span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>,<span class="fl">4.1</span>  },
+    <span class="co"># symmetry correction</span>
+    <span class="kw">&#39;</span><span class="st">sym</span><span class="kw">&#39;</span>   , {<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>,   <span class="dv">0</span>, <span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>,-<span class="fl">1.4</span> });
+
+<span class="kw">my</span> (<span class="dt">$dGs</span>,<span class="dt">$positives_idxs</span>, <span class="dt">$starts</span>, <span class="dt">$ends</span>, <span class="dt">$promoter_type</span>);
+<span class="fu">open</span>(SEQ, <span class="dt">$infile</span>) || <span class="fu">die</span> <span class="kw">&quot;</span><span class="st"># cannot open input </span><span class="dt">$infile</span><span class="st"> : </span><span class="dt">$!</span><span class="ch">\n</span><span class="kw">&quot;</span>;
+<span class="kw">while</span>(<span class="kw">&lt;SEQ&gt;</span>)
+{   
+    <span class="kw">if</span>(<span class="kw">/</span><span class="ch">^(</span><span class="ot">b</span><span class="bn">\d</span><span class="ch">{4})</span><span class="ot"> \\ </span><span class="ch">([</span><span class="bn">ATGC</span><span class="ch">]+)</span><span class="kw">/</span>)
+    {
+        <span class="kw">my</span> (<span class="dt">$name</span>,<span class="dt">$seq</span>) = (<span class="dt">$1</span>,<span class="dt">$2</span>); 
+    
+        <span class="kw">my</span> (<span class="dt">$indexs_Ref</span>, <span class="dt">$deltaGs_Ref</span>) = get_indexs_and_deltaGs_of_windows(<span class="dt">$seq</span>, <span class="dt">$windowL</span>);
+        <span class="kw">my</span> (<span class="dt">$e1s_Ref</span>, <span class="dt">$e2s_Ref</span>, <span class="dt">$differences_Ref</span>, <span class="dt">$possible_regions_Ref</span>) = calculate_e1_and_e2(<span class="dt">$indexs_Ref</span>,<span class="dt">$deltaGs_Ref</span>);
+        <span class="kw">my</span> <span class="dt">@positives_idxs</span> = extract_indexs_of_positive_signals(<span class="dt">$possible_regions_Ref</span>, <span class="dt">$differences_Ref</span>, <span class="dt">$e1s_Ref</span>);
+        <span class="kw">my</span> <span class="dt">@overlaps</span> = check_for_segments_that_overlap(<span class="dt">@positives_idxs</span>);
+        <span class="kw">my</span> (<span class="dt">$starts_Ref</span>, <span class="dt">$ends_Ref</span>) = get_range_of_segments(\<span class="dt">@overlaps</span>,\<span class="dt">@positives_idxs</span>);
+        <span class="kw">my</span> <span class="dt">@trues_or_falses</span> = check_true_false_segment(<span class="dt">$starts_Ref</span>, <span class="dt">$ends_Ref</span>);
+
+        <span class="kw">my</span> <span class="dt">@starts_Ref</span> = (na_if_empty_else_get_strings_versions(<span class="dt">$starts_Ref</span>));
+        <span class="kw">my</span> <span class="dt">@ends_Ref</span> = (na_if_empty_else_get_strings_versions(<span class="dt">$ends_Ref</span>));
+
+        <span class="kw">my</span> <span class="dt">@results</span> = na_if_empty_else_get_strings_versions(<span class="dt">$deltaGs_Ref</span>, \<span class="dt">@positives_idxs</span>, <span class="dt">$differences_Ref</span>, \<span class="dt">@starts_Ref</span>, \<span class="dt">@ends_Ref</span>, \<span class="dt">@trues_or_falses</span>);
+        <span class="fu">print</span>(<span class="fu">join</span>(<span class="kw">&quot;</span><span class="ch">\t</span><span class="kw">&quot;</span>,<span class="dt">$name</span>, <span class="dt">@results</span>, <span class="dt">$experiment_tag</span>) . <span class="kw">&quot;</span><span class="ch">\n</span><span class="kw">&quot;</span>);
+    }
+}
+<span class="fu">close</span>(SEQ);
+
+<span class="co"># Calculate NN free energy of a DNA duplex , dG(t) = (1000*dH - t*dS) / 1000</span>
+<span class="co"># Parameters: 1) DNA sequence string; 2) Celsius temperature.</span>
+<span class="co"># Returns: 1) Free energy scalar.</span>
+<span class="co"># Notes: Uses global hash %NNparams.</span>
+<span class="kw">sub </span><span class="fu">duplex_deltaG</span>
+{
+    <span class="kw">my</span> (<span class="dt">$seq</span>,<span class="dt">$tCelsius</span>) = <span class="dt">@_</span>; 
+    
+    <span class="kw">my</span> (<span class="dt">$DNAstep</span>,<span class="dt">$nt</span>,<span class="dt">$dG</span>,<span class="dt">$total_dG</span>) = (<span class="kw">&#39;&#39;</span>,<span class="kw">&#39;&#39;</span>,<span class="dv">0</span>,<span class="dv">0</span>);
+    <span class="kw">my</span> <span class="dt">@sequence</span> = <span class="fu">split</span>(<span class="kw">//</span>,<span class="fu">uc</span>(<span class="dt">$seq</span>));
+    <span class="kw">my</span> <span class="dt">$tK</span> = <span class="fl">273.15</span> + <span class="dt">$tCelsius</span>;
+    
+    <span class="kw">sub </span><span class="fu">complement</span>{ <span class="dt">$_</span>[<span class="dv">0</span>] =~ <span class="kw">tr</span><span class="ot">/ATGC/TACG/</span>; <span class="kw">return</span> <span class="dt">$_</span>[<span class="dv">0</span>] }
+    
+    <span class="co"># add dG for overlapping dinculeotides</span>
+    <span class="kw">for</span>(<span class="kw">my</span> <span class="dt">$n</span>=<span class="dv">0</span>;<span class="dt">$n</span>&lt;<span class="dt">$#sequence</span>;<span class="dt">$n</span>++) 
+    {
+            <span class="dt">$DNAstep</span> = <span class="dt">$sequence</span>[<span class="dt">$n</span>].<span class="dt">$sequence</span>[<span class="dt">$n</span>+<span class="dv">1</span>].<span class="kw">&#39;</span><span class="st">/</span><span class="kw">&#39;</span>.
+                complement(<span class="dt">$sequence</span>[<span class="dt">$n</span>].<span class="dt">$sequence</span>[<span class="dt">$n</span>+<span class="dv">1</span>]);
+            
+            <span class="kw">if</span>(!<span class="fu">defined</span>(<span class="dt">$NNparams</span>{<span class="dt">$DNAstep</span>}))
+            {
+                <span class="dt">$DNAstep</span> = <span class="fu">reverse</span>(<span class="dt">$DNAstep</span>);
+            }
+            
+            <span class="dt">$dG</span> = ((<span class="dv">1000</span>*<span class="dt">$NNparams</span>{<span class="dt">$DNAstep</span>}{<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>}) -
+                    (<span class="dt">$tK</span>*<span class="dt">$NNparams</span>{<span class="dt">$DNAstep</span>}{<span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>})) / <span class="dv">1000</span> ;
+            
+            <span class="dt">$total_dG</span> += <span class="dt">$dG</span>; 
+    }
+    
+    <span class="co"># add correction for helix initiation</span>
+    <span class="dt">$nt</span> = <span class="dt">$sequence</span>[<span class="dv">0</span>]; <span class="co"># first pair</span>
+    <span class="kw">if</span>(!<span class="fu">defined</span>(<span class="dt">$NNparams</span>{<span class="dt">$nt</span>})){ <span class="dt">$nt</span> = complement(<span class="dt">$nt</span>) } 
+    <span class="dt">$total_dG</span> += ((<span class="dv">1000</span>*<span class="dt">$NNparams</span>{<span class="dt">$nt</span>}{<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>})-
+                    (<span class="dt">$tK</span>*<span class="dt">$NNparams</span>{<span class="dt">$nt</span>}{<span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>})) / <span class="dv">1000</span>; 
+    
+    <span class="dt">$nt</span> = <span class="dt">$sequence</span>[<span class="dt">$#sequence</span>]; <span class="co"># last pair</span>
+    <span class="kw">if</span>(!<span class="fu">defined</span>(<span class="dt">$NNparams</span>{<span class="dt">$nt</span>})){ <span class="dt">$nt</span> = complement(<span class="dt">$nt</span>) }
+    <span class="dt">$total_dG</span> += ((<span class="dv">1000</span>*<span class="dt">$NNparams</span>{<span class="dt">$nt</span>}{<span class="kw">&#39;</span><span class="st">H</span><span class="kw">&#39;</span>})-
+                    (<span class="dt">$tK</span>*<span class="dt">$NNparams</span>{<span class="dt">$nt</span>}{<span class="kw">&#39;</span><span class="st">S</span><span class="kw">&#39;</span>})) / <span class="dv">1000</span>;
+                    
+    <span class="co"># please complete for symmetry correction</span>
+    
+    <span class="kw">return</span> <span class="dt">$total_dG</span>;
+}
+
+<span class="co"># Calculate NN free energy of a DNA duplex for each window in it.</span>
+<span class="co"># Parameters: 1) DNA sequence string; 2) Celsius temperature; 3) Size of windows to evaluate dG.</span>
+<span class="co"># Returns: 1) Indexs of Windows; 2) dGs array of windows.</span>
+<span class="co"># Notes: Uses global hash %NNparams and scalar $T.</span>
+<span class="kw">sub </span><span class="fu">get_indexs_and_deltaGs_of_windows</span>
+{
+    <span class="kw">my</span> (<span class="dt">$seq</span>, <span class="dt">$windowL</span>) = <span class="dt">@_</span>;
+    <span class="kw">my</span> <span class="dt">$start</span> = (<span class="dt">$windowL</span> -<span class="dv">1</span>) / <span class="dv">2</span>;
+    <span class="kw">my</span> <span class="dt">$end</span> = (<span class="fu">length</span> <span class="dt">$seq</span>) - <span class="dt">$start</span> - <span class="dv">1</span>;
+    <span class="kw">my</span> <span class="dt">@indexs</span> = <span class="dt">$start</span>..<span class="dt">$end</span>;
+    <span class="kw">my</span> <span class="dt">@deltaGs</span> = <span class="fu">map</span> {duplex_deltaG(<span class="fu">substr</span>(<span class="dt">$seq</span>, <span class="dt">$_</span> - <span class="dt">$start</span>, <span class="dt">$windowL</span>), <span class="dt">$T</span>)} <span class="dt">@indexs</span>; 
+    <span class="kw">return</span>(\<span class="dt">@indexs</span>, \<span class="dt">@deltaGs</span>);
+}
+
+<span class="co"># Calculates e1 and e2 as well as its differeces.</span>
+<span class="co"># Parameters: 1) Reference array to indexs of windows; 2) Refence array of dGs.</span>
+<span class="co"># Returns: 1) Array e1; 2) Array e2; 3) Array of differences (e1 -e2); 4) Array of possible regions of promoter.</span>
+<span class="co"># Notes: Uses global scalar $size_of_seqs_to_compare and then it is assigned to scalar $size.</span>
+<span class="kw">sub </span><span class="fu">calculate_e1_and_e2</span>
+{
+    <span class="kw">my</span> (<span class="dt">$indexs_Ref</span>, <span class="dt">$deltaGs_Ref</span>) = <span class="dt">@_</span>;
+    <span class="kw">my</span> (<span class="dt">@e1s</span>, <span class="dt">@e2s</span>, <span class="dt">@differences</span>, <span class="dt">@possible_regions</span>, <span class="dt">@seq</span>);
+    <span class="kw">my</span> (<span class="dt">$e1</span>, <span class="dt">$e2</span>);
+    <span class="kw">my</span> <span class="dt">$size</span> = <span class="dt">$size_of_seqs_to_compare</span>;
+    <span class="kw">my</span> <span class="dt">$deltaGsLength</span> = <span class="dt">@$deltaGs_Ref</span>;
+
+    <span class="fu">die</span> <span class="kw">&quot;</span><span class="st">Invalid Size.</span><span class="kw">&quot;</span> <span class="kw">unless</span> (<span class="dt">$size</span> &gt;= <span class="dv">1</span> <span class="kw">and</span> <span class="dt">$size</span> % <span class="dv">4</span> == <span class="dv">0</span>);
+
+    <span class="kw">foreach</span> <span class="kw">my</span> <span class="dt">$index</span> (<span class="dt">@</span>{<span class="dt">$indexs_Ref</span>}){
+        <span class="dt">@seq</span> = <span class="dt">$index</span>..(<span class="dt">$index</span> + <span class="dt">$size</span>);
+
+        <span class="kw">last</span> <span class="kw">if</span> (<span class="dt">$seq</span>[-<span class="dv">1</span>] &gt; <span class="dt">$deltaGsLength</span>);
+
+        <span class="dt">$e1</span> = sum(<span class="dt">@</span>{<span class="dt">$deltaGs_Ref</span>}[<span class="dt">@seq</span>[<span class="dv">0</span>..((<span class="dv">1</span>/<span class="dv">4</span> <span class="kw">*</span> <span class="dt">$size</span>) - <span class="dv">1</span>)]]) / (<span class="dv">1</span>/<span class="dv">4</span> <span class="kw">*</span> <span class="dt">$size</span>);
+        <span class="dt">$e2</span> = sum(<span class="dt">@</span>{<span class="dt">$deltaGs_Ref</span>}[<span class="dt">@seq</span>[(<span class="dv">1</span>/<span class="dv">2</span> <span class="kw">*</span> <span class="dt">$size</span>)..(<span class="dt">$size</span>-<span class="dv">1</span>)]]) / (<span class="dv">1</span>/<span class="dv">2</span> <span class="kw">*</span> <span class="dt">$size</span>);
+
+        <span class="fu">push</span> <span class="dt">@e1s</span>, <span class="dt">$e1</span>;
+        <span class="fu">push</span> <span class="dt">@e2s</span>, <span class="dt">$e2</span>;
+        <span class="fu">push</span> <span class="dt">@differences</span>, <span class="dt">$e1</span> - <span class="dt">$e2</span>;
+        <span class="fu">push</span> <span class="dt">@possible_regions</span>, <span class="dt">$seq</span>[<span class="dv">1</span>/<span class="dv">4</span> <span class="kw">*</span> <span class="dt">$size</span>];
+    }
+    <span class="kw">return</span>(\<span class="dt">@e1s</span>, \<span class="dt">@e2s</span>, \<span class="dt">@differences</span>, \<span class="dt">@possible_regions</span>);
+}
+
+<span class="co"># Extract indexs of  positive signals if dGs &gt; cutoff[0] and e1 &gt; cutoff[2].</span>
+<span class="co"># Parameters: 1) Referece array of possible regions of promoter; 2) Reference array of differences between e1 and e2; 3)Reference array of e1.</span>
+<span class="co"># Returns: 1) Indices that meet the condition extracted from the array of possible_regions.</span>
+<span class="co"># Notes: Uses global array @cutoffs.</span>
+<span class="kw">sub </span><span class="fu">extract_indexs_of_positive_signals</span>
+{
+    <span class="kw">my</span> (<span class="dt">$possible_regions_Ref</span>, <span class="dt">$differences_Ref</span>, <span class="dt">$e1s_Ref</span>) = <span class="dt">@_</span>;
+    <span class="kw">my</span> (<span class="dt">@positives_idxs</span>, <span class="dt">$i</span>); <span class="kw">my</span> <span class="dt">@indexs</span> = <span class="dt">@$possible_regions_Ref</span>;
+
+    <span class="kw">for</span> <span class="dt">$i</span> (<span class="dv">0</span>..<span class="dt">@</span>{<span class="dt">$differences_Ref</span>} - <span class="dv">1</span>){
+        <span class="fu">push</span> <span class="dt">@positives_idxs</span>, <span class="dt">$indexs</span>[<span class="dt">$i</span>] <span class="kw">if</span>((<span class="dt">@$differences_Ref</span>[<span class="dt">$i</span>] &gt; <span class="dt">$cutoffs</span>[<span class="dv">0</span>]) <span class="kw">and</span> (<span class="dt">@$e1s_Ref</span>[<span class="dt">$i</span>] &gt; <span class="dt">$cutoffs</span>[<span class="dv">1</span>]));
+    }
+    <span class="kw">return</span> (<span class="dt">@positives_idxs</span>);
+}
+
+<span class="co"># Boolean function of segments that overlap. 1 if segments shared nucleotides in range of $size_of_segment else 0.</span>
+<span class="co"># Parameters: 1) Array of positive indexs.</span>
+<span class="co"># Returns: 1) Array of booleans (1,0). </span>
+<span class="co"># Notes: Uses global scalar $size_overlap.</span>
+<span class="kw">sub </span><span class="fu">check_for_segments_that_overlap</span>
+{
+    <span class="kw">my</span> (<span class="dt">@positives_idxs</span>) = <span class="dt">@_</span>;
+    <span class="kw">return</span> <span class="fu">map</span> {(<span class="dt">$positives_idxs</span>[<span class="dt">$_</span>] + <span class="dt">$size_overlap</span> &gt;= <span class="dt">$positives_idxs</span>[<span class="dt">$_</span> + <span class="dv">1</span>] - <span class="dt">$size_overlap</span>) ? <span class="dv">1</span> : <span class="dv">0</span>} <span class="dv">0</span>..(<span class="dt">@positives_idxs</span> - <span class="dv">2</span>);
+}
+
+<span class="co"># Get starts and ends of segments.</span>
+<span class="co"># Parameters: 1) Reference array of overlaps; 2) Reference array of positive_idxs.</span>
+<span class="co"># Returns: 1) Reference array of starts. 2) Reference array of ends.</span>
+<span class="kw">sub </span><span class="fu">get_range_of_segments</span>
+{
+    <span class="kw">my</span> (<span class="dt">$overlaps</span>, <span class="dt">$positives_idxs</span>) = <span class="dt">@_</span>;
+
+    <span class="kw">my</span> (<span class="dt">@starts</span>, <span class="dt">@ends</span>, <span class="dt">$start_idx</span>, <span class="dt">$i</span>);
+    <span class="kw">my</span> <span class="dt">$start_segment</span> = <span class="dv">0</span>;
+
+    <span class="kw">for</span> <span class="dt">$i</span> (<span class="dv">0</span>..<span class="dt">@</span>{<span class="dt">$positives_idxs</span>} - <span class="dv">1</span>){
+
+        <span class="kw">if</span> (<span class="dt">@</span>{<span class="dt">$positives_idxs</span>} == <span class="dv">1</span>){
+            <span class="fu">push</span>(<span class="dt">@starts</span>, <span class="dt">$</span>{<span class="dt">$positives_idxs</span>}[<span class="dt">$i</span>]);
+            <span class="fu">push</span>(<span class="dt">@ends</span>, <span class="dt">$</span>{<span class="dt">$positives_idxs</span>}[<span class="dt">$i</span>]);
+            <span class="kw">next</span>;
+        }
+
+        <span class="kw">next</span> <span class="kw">if</span> (<span class="dt">$</span>{<span class="dt">$overlaps</span>}[<span class="dt">$i</span>] <span class="kw">and</span> <span class="dt">$start_segment</span>);
+        <span class="kw">if</span>(<span class="dt">$</span>{<span class="dt">$overlaps</span>}[<span class="dt">$i</span>]){
+            <span class="dt">$start_idx</span> = <span class="dt">$</span>{<span class="dt">$positives_idxs</span>}[<span class="dt">$i</span>];
+            <span class="dt">$start_segment</span> = <span class="dv">1</span>;
+        }
+        <span class="kw">else</span>{
+            <span class="kw">if</span>(<span class="dt">$start_segment</span> &gt; <span class="dv">0</span>){
+                <span class="fu">push</span>(<span class="dt">@starts</span>, <span class="dt">$start_idx</span>);
+                <span class="fu">push</span>(<span class="dt">@ends</span>, <span class="dt">$</span>{<span class="dt">$positives_idxs</span>}[<span class="dt">$i</span>]);
+                <span class="dt">$start_segment</span> = <span class="dv">0</span>;
+            }
+            <span class="kw">else</span>{
+                <span class="dt">$start_segment</span> = <span class="dv">0</span>;
+            }
+        }
+    }
+    <span class="kw">return</span>(\<span class="dt">@starts</span>, \<span class="dt">@ends</span>);
+}
+
+<span class="co"># Check if the segments found are within a bounded region.</span>
+<span class="co"># Parameters: 1) Reference array of starts; 2) Reference array of ends;</span>
+<span class="co"># Returns: 1) Array with TRUE or FALSE string if the segment meets the condition.</span>
+<span class="kw">sub </span><span class="fu">check_true_false_segment</span>
+{
+    <span class="kw">my</span> (<span class="dt">$starts_Ref</span>, <span class="dt">$ends_Ref</span>) = <span class="dt">@_</span>;
+    <span class="kw">my</span> <span class="dt">@starts</span> = <span class="dt">@</span>{<span class="dt">$starts_Ref</span>};
+    <span class="kw">my</span> <span class="dt">@ends</span> = <span class="dt">@</span>{<span class="dt">$ends_Ref</span>};
+    <span class="kw">my</span> (<span class="dt">$l</span>, <span class="dt">$u</span>) = <span class="dt">@delim_region_to_check</span>;
+    <span class="kw">my</span> <span class="dt">@region</span> = <span class="dt">$region_of_seq</span>[<span class="dv">0</span>]..<span class="dt">$region_of_seq</span>[<span class="dv">1</span>];
+
+    <span class="kw">return</span> <span class="fu">map</span> {((<span class="dt">$region</span>[<span class="dt">$starts</span>[<span class="dt">$_</span>]] &gt;= <span class="dt">$l</span>) <span class="kw">and</span> (<span class="dt">$region</span>[<span class="dt">$ends</span>[<span class="dt">$_</span>]] &lt;= <span class="dt">$u</span>)) ? <span class="kw">&quot;</span><span class="st">TRUE</span><span class="kw">&quot;</span> : <span class="kw">&quot;</span><span class="st">FALSE</span><span class="kw">&quot;</span>} <span class="dv">0</span>..<span class="dt">@</span>{<span class="dt">$starts_Ref</span>}-<span class="dv">1</span>;
+}
+
+<span class="co"># Join the elements of a vector with commas if it is not empty.</span>
+<span class="co"># Parameters: 1) Refenreces of Arrays to check.</span>
+<span class="co"># Returns: 1) NA if empty else string version of array.</span>
+<span class="kw">sub </span><span class="fu">na_if_empty_else_get_strings_versions</span>
+{
+    <span class="kw">my</span> (<span class="dt">@arrays_to_check</span>) = <span class="dt">@_</span>;
+    <span class="kw">return</span> <span class="fu">map</span>{<span class="dt">@</span>{<span class="dt">$_</span>} ? <span class="fu">join</span>(<span class="kw">&quot;</span><span class="st">,</span><span class="kw">&quot;</span>, <span class="dt">@</span>{<span class="dt">$_</span>}) : <span class="kw">&quot;</span><span class="st">NA</span><span class="kw">&quot;</span>} <span class="dt">@arrays_to_check</span>;
+}</code></pre></div>
+<p></details></p>
+</div>
+<div id="parametros" class="section level3">
+<h3>1.4 Parámetros</h3>
+<table>
+<thead>
+<tr class="header">
+<th>N. Parámetro</th>
+<th>Forma Corta</th>
+<th>Forma Larga</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>-i</td>
+<td>- -inputfile</td>
+<td>../data/K12_400_50_sites</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>-t</td>
+<td>- -temperature</td>
+<td>37</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>-w</td>
+<td>- -window_length</td>
+<td>15</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>-s</td>
+<td>- -size_compare</td>
+<td>200</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>-o</td>
+<td>- -size_overlap</td>
+<td>25</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>-c</td>
+<td>- -cutoffs</td>
+<td>3.4,-15.99</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>-r</td>
+<td>- -region_seq</td>
+<td>-400,500</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>-d</td>
+<td>- -delimited_region</td>
+<td>-150,50</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>-e</td>
+<td>- -tag</td>
+<td>test1</td>
+</tr>
+</tbody>
+</table>
+<div id="caracteristicas-de-archivo-de-entrada" class="section level4">
+<h4>1.2.1 Características de archivo de entrada</h4>
+<p>Las líneas leídas por el programa para su análisis deben cumplir:</p>
+<ul>
+<li>Secuencia e identificador en misma línea.</li>
+<li>Expresión regular: <code>/^(b\d{4}) \\ ([ATGC]+)/</code>. <code>Nota: Si tus secuencias siguen otro patrón puedes acceder al código fuente y modificarlo a tu conveniencia.</code></li>
+</ul>
+</div>
+<div id="ejemplos-de-uso" class="section level4">
+<h4>1.3 Ejemplos de uso</h4>
+<div id="forma-corta" class="section level5">
+<h5>1.3.1 Forma corta</h5>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">perl</span> nearest_neighbor_dG_calculator.pl -i ../data/K12_400_50_sites -t 37 -w 15 -s 200 -o 25 -c 3.4,-15.99 -r -400,50 -d -150,50 -e test1</code></pre></div>
+</div>
+<div id="forma-extendida" class="section level5">
+<h5>1.3.2 Forma extendida</h5>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">perl</span> nearest_neighbor_dG_calculator.pl --inputfile ../data/K12_400_50_sites --temperature 37 --window_length 15 --size_compare 200 --size_overlap 25 --cutoffs 3.4,-15.99 --region_seq -400,50 --delimited_region -150,50 --experiment_tag test1</code></pre></div>
+</div>
+<div id="forma-mixta" class="section level5">
+<h5>1.3.3 Forma mixta</h5>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">perl</span> nearest_neighbor_dG_calculator.pl -i data/K12_400_50_sites -t 37 --window_length 15 -s 200 -o 25 --cutoffs 3.4,-15.99 -r -400,50 -d -150,50 -e test1</code></pre></div>
+</div>
+</div>
+<div id="salida" class="section level4">
+<h4>1.4 Salida</h4>
+<p>El programa imprimera por <em>standard output</em> lo siguiente:</p>
+<ul>
+<li>Ocho líneas de comentarios con parámetros de ejecución. Identificador de comentario: <code>#</code>.</li>
+<li><p>Cabecera:</p>
+<table>
+<colgroup>
+<col width="14%" />
+<col width="16%" />
+<col width="13%" />
+<col width="15%" />
+<col width="6%" />
+<col width="6%" />
+<col width="19%" />
+<col width="7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Nombre de secuencia</th>
+<th>Energía libre de Gibbs</th>
+<th>Indices positivos</th>
+<th>Diferencia de energía</th>
+<th>inicios</th>
+<th>finales</th>
+<th>clasificación de segmentos</th>
+<th>etiqueta</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>seq_name</td>
+<td>dGs</td>
+<td>positive_index</td>
+<td>energy_difference</td>
+<td>starts</td>
+<td>ends</td>
+<td>type_segment</td>
+<td>tag</td>
+</tr>
+</tbody>
+</table></li>
+<li>Observaciones:
+<ul>
+<li>Un único valor: <code>1</code></li>
+<li>Uno o mas separados por coma: <code>2</code></li>
+<li>Posibles NA: <code>3</code></li>
+</ul></li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th align="center">seq_name</th>
+<th align="center">dGs</th>
+<th align="center">positive_index</th>
+<th align="center">energy_difference</th>
+<th align="center">starts</th>
+<th align="center">ends</th>
+<th align="center">type_segment</th>
+<th align="center">tag</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center">2</td>
+<td align="center">2,3</td>
+<td align="center">2,3</td>
+<td align="center">2,3</td>
+<td align="center">2,3</td>
+<td align="center">2,3</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="antes-de-comenzar" class="section level2">
+<h2>2. Antes de Comenzar</h2>
+<div id="instalacion-de-tidyverse" class="section level3">
+<h3>2.1 Instalación de tidyverse</h3>
+<p><strong>tidyverse</strong> es un conjunto de paquetes que funcionan en armonía porque comparten representaciones de datos comunes y diseño de API. El paquete tidyverse está diseñado para facilitar la instalación y carga de los paquetes principales desde el tidyverse en un solo comando.</p>
+<p>Si desea aprender a usar el tidyverse de manera efectiva, el mejor lugar para comenzar es <a href="https://r4ds.had.co.nz/">R for data science</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Install from CRAN</span>
+<span class="kw">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>)
+
+<span class="co"># Or the development version from GitHub</span>
+<span class="co"># install.packages(&quot;devtools&quot;)</span>
+devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;hadley/tidyverse&quot;</span>)</code></pre></div>
+</div>
+<div id="como-llamarlo" class="section level3">
+<h3>2.2 ¿Cómo llamarlo?</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)</code></pre></div>
+</div>
+</div>
+<div id="funciones-propias" class="section level2">
+<h2>3. Funciones propias</h2>
+<div id="correr-un-nuevo-experimento" class="section level3">
+<h3>3.1 Correr un nuevo experimento</h3>
+<p>Como podrás haber notado en la sección <em>1.3</em> puede resultar tedioso el tener que escribir todo el comando que ejecutará el programa para calcular las diferencias de energía en nuestras secuencias, además de que si queremos realizar multiples experimentos tendríamos que escribirlo una y otra vez. Por ello se ha decidido crear una función que se encargue de crear y ejecutar la <em>cadena</em> con tan sólo pasar los parámetros necesarios.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">run_new_experiment &lt;-<span class="st"> </span><span class="cf">function</span>(i,t,w,s,o,c,r,d,<span class="dt">e =</span> <span class="st">&quot;Experiment1&quot;</span>, <span class="dt">out =</span> <span class="st">&quot;promoter&quot;</span>)
+{
+  c &lt;-<span class="st"> </span><span class="kw">paste</span>(c, <span class="dt">collapse =</span> <span class="st">&quot;,&quot;</span>); r &lt;-<span class="st"> </span><span class="kw">paste</span>(r, <span class="dt">collapse =</span> <span class="st">&quot;,&quot;</span>); d &lt;-<span class="st"> </span><span class="kw">paste</span>(d, <span class="dt">collapse =</span> <span class="st">&quot;,&quot;</span>)
+  run &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;perl nearest_neighbor_dG_calculator.pl -i&quot;</span>,i, <span class="st">&quot;-t&quot;</span>,t, <span class="st">&quot;-w&quot;</span>, w, <span class="st">&quot;-s&quot;</span>, s,
+        <span class="st">&quot;-o&quot;</span>, o, <span class="st">&quot;-c&quot;</span>, c, <span class="st">&quot;-r&quot;</span>, r, <span class="st">&quot;-d&quot;</span>, d, <span class="st">&quot;-e&quot;</span>, e, <span class="st">&quot;&gt;&quot;</span>, out)
+  <span class="kw">system</span>(run)
+}</code></pre></div>
+</div>
+<div id="campos-con-multiples-observaciones" class="section level3">
+<h3>3.2 Campos con multiples observaciones</h3>
+<p>¿Cómo lidiar con los multiples resultados que puede arrojar el algoritmo por campo?<br />
+La función <code>separate_rows</code> del paquete <em>tidyr</em> puede ayudarnos ya que si una variable contiene observaciones con múltiples valores delimitados, ésta separará los valores y los colocará cada uno en su propia fila.<br />
+Algunas veces no sólo querremos separar los campos, sino también conservar algunas columnas que nos sirvan como identificadores en el proceso de análisis de datos. Esta es la razón de que la función tome como parámetro un <em>vector/lista</em> que contenga los nombres de las variables a conservar en nuestros datos.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">select_cols_sep_rows &lt;-<span class="st"> </span><span class="cf">function</span>(.data, ..., <span class="dt">.ids =</span> <span class="ot">NULL</span>, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">convert =</span> <span class="ot">TRUE</span>)
+{
+  <span class="kw">require</span>(dplyr)
+  <span class="cf">if</span> (<span class="kw">missing</span>(...)) <span class="kw">stop</span>(<span class="st">&quot;No columns to select.&quot;</span>)
+  <span class="kw">return</span>(.data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(.ids, ...) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separate_rows</span>(..., <span class="dt">sep =</span> sep, <span class="dt">convert =</span> convert))
+}</code></pre></div>
+</div>
+<div id="obtencion-de-region-de-vententas" class="section level3">
+<h3>3.3 Obtención de región de vententas</h3>
+<p>Está función es realmente un problema que se les pasó a los <em>desarrolladores</em> del programa número 1, ya que estos no incluyeron una columna en la que se especifiquen los índices relativos de cada una de las ventanas en el rango especificado. Esperemos lo arreglen en futuras versiones.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">get_window_region &lt;-<span class="st"> </span><span class="cf">function</span>(windowL, region)
+{
+  start &lt;-<span class="st"> </span>(windowL <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">/</span><span class="st"> </span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
+  region &lt;-<span class="st"> </span>region[<span class="dv">1</span>]<span class="op">:</span>region[<span class="dv">2</span>]
+  region[(start<span class="op">-</span><span class="dv">1</span>)<span class="op">:</span>(<span class="kw">length</span>(region) <span class="op">-</span><span class="st"> </span>start)]
+}</code></pre></div>
+</div>
+<div id="generacion-de-secuencias-aleatorias" class="section level3">
+<h3>3.4 Generación de secuencias aleatorias</h3>
+<p>Para comparar resultados puedes generar secuencias aleatorias de tamaños iguales a los de tus secuencias. Si lo requieres puedes agregar un vector de probabilidades para cada nucléotico tras haber calibrado los contenidos de AT,CG de tus secuencias. Ejemplo: <code>probs = c(0.25,0.25,0.25,0.25)</code> será pasado mediante <code>...</code> a la función <code>sample</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">generate_random_seqs &lt;-<span class="st"> </span><span class="cf">function</span>(n,length, <span class="dt">out =</span> <span class="ot">NULL</span>, ...)
+{
+  random_seqs &lt;-<span class="st"> </span><span class="kw">map_chr</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="cf">function</span>(x){
+      sequence &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>,<span class="st">&quot;G&quot;</span>,<span class="st">&quot;T&quot;</span>), <span class="dt">size =</span> length, <span class="dt">replace =</span> <span class="ot">TRUE</span>, ...), <span class="dt">collapse=</span><span class="st">&quot;&quot;</span>)
+      identifier &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;b&quot;</span>,<span class="kw">str_pad</span>(x, <span class="dt">width =</span> <span class="dv">4</span>, <span class="dt">side =</span> <span class="st">&quot;left&quot;</span>, <span class="dt">pad =</span> <span class="st">&quot;0&quot;</span>))
+      <span class="kw">return</span>(<span class="kw">paste0</span>(identifier,<span class="st">&quot; </span><span class="ch">\\</span><span class="st"> &quot;</span>, sequence, <span class="st">&quot; </span><span class="ch">\\</span><span class="st">&quot;</span>))
+      })
+  <span class="cf">if</span> (<span class="kw">is.null</span>(out)){
+    <span class="kw">return</span>(random_seqs)
+  }
+  <span class="kw">write_lines</span>(random_seqs, out)
+}</code></pre></div>
+<p>O hacer uso de <a href="">RSAT</a> y después parsearlo a un formato adecuado para el programa.</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">random-seq</span> -l 451 -n 84 -org Escherichia_coli_K_12 -o example_random_sequences.fasta</code></pre></div>
+</div>
+</div>
+<div id="corriendo-experimentos-con-r" class="section level2">
+<h2>4. Corriendo Experimentos con R</h2>
+<p>El primer paso será definir una lista de parámetros. Estos serán definidos bajo las específicaciones de la función <em>pmap</em> del paquete <em>purrr</em> para programación funcional. Aquí podrás encontrar documentación y ejemplos: <a href="https://purrr.tidyverse.org/reference/map2.html">Map over multiple inputs simultaneously</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">experiments &lt;-<span class="st"> </span><span class="kw">list</span>(
+  <span class="dt">i =</span> <span class="kw">list</span>(<span class="st">&quot;../data/K12_400_50_sites&quot;</span>,<span class="st">&quot;../data/randomseqs.txt&quot;</span>), <span class="co"># Input sequences files.</span>
+  <span class="dt">t =</span> <span class="kw">list</span>(<span class="dv">37</span>), <span class="co"># Temperature to simulate.</span>
+  <span class="dt">w =</span> <span class="kw">list</span>(<span class="dv">15</span>), <span class="co"># Window Length.</span>
+  <span class="dt">s =</span> <span class="kw">list</span>(<span class="dv">200</span>,<span class="dv">200</span>), <span class="co"># Size of segment.</span>
+  <span class="dt">o =</span> <span class="kw">list</span>(<span class="dv">25</span>), <span class="co"># Overlap size.</span>
+  <span class="dt">c =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="fl">3.4</span>,<span class="op">-</span><span class="fl">15.99</span>),<span class="kw">c</span>(<span class="fl">3.4</span>,<span class="op">-</span><span class="fl">15.99</span>)), <span class="co"># Cutoffs for dGs and E1.</span>
+  <span class="dt">r =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="op">-</span><span class="dv">400</span>,<span class="dv">50</span>), <span class="kw">c</span>(<span class="op">-</span><span class="dv">400</span>,<span class="dv">50</span>)), <span class="co"># Region of sequences.</span>
+  <span class="dt">d =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="op">-</span><span class="dv">150</span>,<span class="dv">50</span>), <span class="kw">c</span>(<span class="op">-</span><span class="dv">150</span>,<span class="dv">50</span>)), <span class="co"># Interest Region to check for true positives.</span>
+  <span class="dt">e =</span> <span class="kw">list</span>(<span class="st">&quot;segment_200&quot;</span>, <span class="st">&quot;random_seqs&quot;</span>), <span class="co"># Tag experiments.</span>
+  <span class="dt">out =</span> <span class="kw">list</span>(<span class="st">&quot;../data/possible_promoter.tsv&quot;</span>,<span class="st">&quot;../data/random.tsv&quot;</span>) <span class="co"># Outfiles paths.</span>
+)
+system_out &lt;-<span class="st"> </span><span class="kw">pmap</span>(experiments, run_new_experiment)</code></pre></div>
+</div>
+<div id="manipulacion-de-datos" class="section level2">
+<h2>5. Manipulación de Datos</h2>
+<p>Haciendo uso de la función <em>map_df</em> podemos leer cada uno de los archivos generados en el paso anterior y concatenarlos en un único data frame.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">experiments_data &lt;-<span class="st"> </span><span class="kw">map_df</span>(experiments<span class="op">$</span>out, read_tsv, <span class="dt">comment =</span> <span class="st">&quot;#&quot;</span>, <span class="dt">col_types =</span> <span class="kw">c</span>(<span class="st">&quot;cccccccc&quot;</span>))</code></pre></div>
+<p>Para poder conservar el orden de las etiquetas de cada archivo deberemos asignarlas como factor.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">experiments_data<span class="op">$</span>tag &lt;-<span class="st"> </span><span class="kw">factor</span>(experiments_data<span class="op">$</span>tag, <span class="dt">levels =</span> experiments<span class="op">$</span>e)</code></pre></div>
+<p>Ahora es momento de obtener subconjuntos de datos para trabajarlos cada uno por separado.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">windows_regions &lt;-<span class="st"> </span><span class="kw">pmap</span>(experiments[<span class="kw">c</span>(<span class="st">&quot;w&quot;</span>,<span class="st">&quot;r&quot;</span>)], get_window_region) 
+dGs_data &lt;-<span class="st"> </span><span class="kw">select_cols_sep_rows</span>(experiments_data, <span class="dt">.ids =</span> <span class="kw">c</span>(<span class="st">&quot;seq_name&quot;</span>, <span class="st">&quot;tag&quot;</span>), dGs)
+diff_data &lt;-<span class="st"> </span><span class="kw">select_cols_sep_rows</span>(experiments_data, <span class="dt">.ids =</span> <span class="kw">c</span>(<span class="st">&quot;seq_name&quot;</span>, <span class="st">&quot;tag&quot;</span>), energy_difference)
+segments_data &lt;-<span class="st"> </span><span class="kw">select_cols_sep_rows</span>(experiments_data, <span class="dt">.ids =</span> <span class="kw">c</span>(<span class="st">&quot;seq_name&quot;</span>,<span class="st">&quot;tag&quot;</span>), type_segment)</code></pre></div>
+<p>En los primeros dos pipelines agregamos una nueva columna llamada <em>relative_position</em> que contiene las posiciones relativas a los índices de las ventanas evaluadas para cada experimento.<br />
+El los últimos dos pipelines obtenemos los datos minimos para cada secuencia en cada experimento y los porcentajes de categorías de cada segmento; positivivo verdadero = TRUE, falso verdadero = FALSE, NA = posible segmento no encontrado.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dGs_data &lt;-<span class="st"> </span>dGs_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(tag) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarize</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>tag) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">t</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">map2</span>(windows_regions,<span class="op">~</span><span class="kw">rep_len</span>(.y, .x[<span class="dv">1</span>])) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">flatten_int</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">.data =</span> dGs_data, <span class="dt">relative_position =</span> .)
+
+diff_data &lt;-<span class="st"> </span>diff_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(tag) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">max =</span> <span class="kw">max</span>(<span class="kw">table</span>(seq_name)), <span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>tag) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">t</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">map2</span>(windows_regions, <span class="op">~</span><span class="kw">rep_len</span>(.y[<span class="dv">1</span><span class="op">:</span>.x[<span class="dv">1</span>]],.x[<span class="dv">2</span>])) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">flatten_int</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">.data =</span> diff_data, <span class="dt">relative_position =</span> .)
+
+min_diff_data &lt;-<span class="st"> </span>diff_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(tag,seq_name) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">min_ =</span> <span class="kw">min</span>(energy_difference)) 
+
+segments_data &lt;-<span class="st"> </span>segments_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(tag,type_segment) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(tag) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">percent =</span> n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))</code></pre></div>
+</div>
+<div id="visualizacion-de-datos" class="section level2">
+<h2>6. Visualización de Datos</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(dGs_data, <span class="kw">aes</span>(<span class="dt">x =</span> relative_position, <span class="dt">y=</span> dGs, <span class="dt">color =</span> seq_name)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">4</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Nucleotide Position&quot;</span>, <span class="dt">y =</span> <span class="kw">expression</span>(Delta<span class="op">*</span>Gs)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;none&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>tag, <span class="dt">scales =</span> <span class="st">&quot;free&quot;</span>)</code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/pos_vs_dGs-1.png" alt="**Figure 3. Gibbs free energy per Window per Experiment.** " width="960" />
+<p class="caption">
+<strong>Figure 3. Gibbs free energy per Window per Experiment.</strong>
+</p>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(diff_data, <span class="kw">aes</span>(<span class="dt">x =</span> relative_position, <span class="dt">y=</span> energy_difference, <span class="dt">color =</span> seq_name)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Nucleotide Position&quot;</span>, <span class="dt">y =</span> <span class="kw">expression</span>(<span class="kw">D</span>(n))) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">&quot;none&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>tag, <span class="dt">scales =</span> <span class="st">&quot;free&quot;</span>)</code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/D(n)-1.png" alt="**Figure 4. D(n) per window avaible in sequence region.**" width="960" />
+<p class="caption">
+<strong>Figure 4. D(n) per window avaible in sequence region.</strong>
+</p>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(min_diff_data, <span class="kw">aes</span>(<span class="dt">x=</span>min_, <span class="dt">fill =</span> tag)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">alpha =</span> <span class="fl">0.3</span>, <span class="dt">position =</span> <span class="st">&quot;identity&quot;</span>, <span class="kw">aes</span>(<span class="dt">y =</span> ..density..), <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="kw">aes</span>(<span class="dt">xintercept =</span> <span class="kw">mean</span>(min_)), <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="dt">size =</span> <span class="dv">1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Difference of Energy&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Density&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">guides</span>(<span class="dt">fill =</span> <span class="kw">guide_legend</span>(<span class="dt">title =</span> <span class="st">&quot;Tag of Experiment&quot;</span>))</code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/distributions_of_minimus_per_sequence-1.png" alt="**Figure 5. Density distribution of minimun D(n) per secuence per experiment condition.**" width="960" />
+<p class="caption">
+<strong>Figure 5. Density distribution of minimun D(n) per secuence per experiment condition.</strong>
+</p>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(segments_data, <span class="kw">aes</span>(<span class="dt">x =</span> tag, <span class="dt">y =</span> percent, <span class="dt">fill =</span> type_segment)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;fill&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_label</span>(<span class="kw">aes</span>(<span class="dt">label =</span> scales<span class="op">::</span><span class="kw">percent</span>(percent)),
+             <span class="dt">position =</span> <span class="st">&quot;fill&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">vjust =</span> <span class="dv">1</span>, <span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> scales<span class="op">::</span>percent) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Tag of Experiment&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Percentage&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">fill =</span> <span class="kw">guide_legend</span>(<span class="dt">title =</span> <span class="st">&quot;Type of Segments&quot;</span>))</code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figures/percentage-1.png" alt="**Figure 6. Percentage of true positives (blue), false positives (red) and NA (gray) per experiment condition.**" width="960" />
+<p class="caption">
+<strong>Figure 6. Percentage of true positives (blue), false positives (red) and NA (gray) per experiment condition.</strong>
+</p>
+</div>
+<div class="figure" style="text-align: center">
+<img src="figures/percentage_less_to_right-1.png" alt="**Figura 7. Effect of evaluating more segments to the right.**" width="1000" height="1000" />
+<p class="caption">
+<strong>Figura 7. Effect of evaluating more segments to the right.</strong>
+</p>
+</div>
+</div>
+<div id="a-divertise" class="section level2">
+<h2>7. A divertise</h2>
+<p>Ahora que has terminado de leer esto puedes regresar y probar con distintas combinaciones de parametros para descubrir patrones que puedan estar ocultos por ahí… Suerte.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

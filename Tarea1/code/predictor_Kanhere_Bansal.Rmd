@@ -1,0 +1,680 @@
+---
+title: "Bioinformática Estructural"
+author: "Salazar Medina Diana, Vélez Santiago Jesús"
+date:  "`r format(Sys.time(), '%d de %B de %Y')`"
+output:
+  html_document:
+    self_contained: no
+    fig_caption: yes
+    highlight: zenburn
+    theme: cerulean
+    toc: yes
+    toc_depth: 5
+    toc_float: yes
+  ioslides_presentation:
+    slide_level: 4
+    self_contained: no
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    smaller: yes
+    toc: yes
+    widescreen: yes
+  revealjs::revealjs_presentation:
+    theme: night
+    transition: none
+    self_contained: true
+    css: ../../slides.css
+  slidy_presentation:
+    smart: no
+    slide_level: 2
+    self_contained: yes
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    highlight: tango
+    incremental: no
+    keep_md: yes
+    smaller: yes
+    theme: cerulean
+    toc: yes
+    widescreen: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: zenburn
+    toc: yes
+    toc_depth: 3
+  beamer_presentation:
+    colortheme: dolphin
+    fig_caption: yes
+    fig_height: 6
+    fig_width: 7
+    fonttheme: structurebold
+    highlight: tango
+    incremental: no
+    keep_tex: no
+    slide_level: 2
+    theme: Montpellier
+    toc: yes
+font-import: http://fonts.googleapis.com/css?family=Risque
+subtitle: Predictor D(n) de Kanhere y Bansal
+font-family: Garamond
+transition: linear
+---
+
+```{r include=FALSE, echo=FALSE, eval=TRUE}
+library(knitr)
+library(kableExtra)
+library(jpeg)
+library(png)
+library(grid)
+# library(formattable)
+options(width = 300)
+# options(encoding = 'UTF-8')
+knitr::opts_chunk$set(
+  fig.width = 10, fig.height = 6, 
+  fig.path = 'figures/',
+  fig.align = "center", 
+  size = "tiny", 
+  echo = TRUE, eval = TRUE, 
+  warning = FALSE, message = FALSE, 
+  results = FALSE, comment = "")
+options(scipen = 12) ## Max number of digits for non-scientific notation
+# knitr::asis_output("\\footnotesize")
+
+knitr::knit_hooks$set(
+  source = function(x, options) {
+    hook.r = function(x, options) {
+      fence <- "```"
+      language = tolower(options$engine)
+      if (language == 'node') language = 'javascript'
+      if (!options$highlight) language = 'text'
+      if(!is.null(options$foldcode)) {
+      paste0('\n\n', "<details><summary>Mostrar código</summary>\n", fence, language, '\n', x, fence,  '\n\n', "</details>\n")
+      } else {
+              paste0('\n\n', fence, language, '\n', x, fence,  '\n\n')
+      }
+    }
+    x = knitr:::hilight_source(x, 'markdown', options)
+    hook.r(
+      paste(c(x, ''), collapse = '\n'), 
+      options
+    )
+  }
+)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. Implementación de Algortimo de Kanhere y Bansal
+  
+### 1.1 Metodología de Kanhere y Bansal
+```{r flow_chart, echo=FALSE, out.width=1000, out.height=1000, fig.cap="**Figura 1.**  Diagrama de flujo resumiendo la metodología de Kanhere y Bansal."}
+img <- readJPEG("./figures/flow_chart.jpg")
+grid.raster(img)
+```
+
+### 1.2 Cálculo de diferencia energética: D(n)
+
+$$ D(n) = E1(n) - E2(n) $$
+$$ donde, $$
+$$  E1(n) = \frac{\sum_{n}^{n + \frac{s}{4}}\Delta G °}{\frac{s}{4}} $$
+$$  E1(n) = \frac{\sum_{n+\frac{s}{2}}^{n + s}\Delta G °}{\frac{s}{2}} $$
+$$ s \bmod 4 = 0,  s \in N^+ $$
+$$   $$
+```{r diagram, echo=FALSE, out.width=1000, out.height=1000, fig.cap="**Figure 2.**  Diagrama de flujo resumiendo la metodología de Kanhere y Bansal."}
+img <- readJPEG("./figures/Diagrama_t1.jpg")
+grid.raster(img)
+```
+### 1.3 Implementación
+```{perl, eval = FALSE, foldcode = TRUE}
+#!/usr/bin/perl -w
+# V1.0
+# Nearest Neighbor dG calculator.
+# Salazar Diana, Velez Jesus.
+# dsalazar@lcg.unam.mx, jvelez@lcg.unam.mx
+
+# Returns:
+# 	Print the following data in tabular format and if a field contains more than one value, these will be separated by a comma.
+#	seq_name	dGs	positive_index	energy_difference	starts	ends	type_segment	tag
+#	
+
+# Examples of use:
+# perl nearest_neighbor_dG_calculator.pl -i data/K12_400_50_sites -t 37 -w 15 -s 200 -o 25 -c 3.4,-15.99 -r -400,50 -d -200,50 -e test1
+# perl nearest_neighbor_dG_calculator.pl --inputfile data/K12_400_50_sites --temperature 37 --window_length 15 --size_compare 200 --size_overlap 25 --cutoffs 3.4,-15.99 --region_seq -400,50 --delimited_region -200,50 --experiment_tag test1
+# Combinations of short or long forms of parameters are also valid.
+# Notes:
+# 	For now there are no default values so all must be specified.
+#	All the necessary validations have not been verified so you should be careful in the parameters that you enter make sense.
+
+use strict;
+use List::Util qw(sum);
+use Getopt::Mixed;
+
+Getopt::Mixed::init(
+ "i=s t=i w=i s=i o=i c=s r=s d=s e=s
+ inputfile>i temperature>t window_length>w size_compare>s size_overlap>o cutoffs>c region_seq>r delimited_region>d tag>e");
+my ($infile, $T, $windowL, $size_of_seqs_to_compare, $size_overlap, @cutoffs, @region_of_seq, @delim_region_to_check, $experiment_tag);
+while( my( $option, $value, $pretty ) = Getopt::Mixed::nextOption())
+{
+    OPTION: {
+      $option eq 'i' and do {
+        $infile = $value;
+        last OPTION;
+      };
+      $option eq 't' and do {
+        $T = $value;
+        last OPTION;
+      };
+      $option eq 'w' and do {
+        $windowL = $value;
+        die "Window Size must be greater or equal to 1." if $windowL < 1;
+        last OPTION;
+      };
+      $option eq 's' and do {
+        $size_of_seqs_to_compare = $value;
+        die "Size of sequence to compare must be greater or equal to 1." if $size_of_seqs_to_compare < 1;
+        last OPTION;
+      };
+      $option eq 'o' and do {
+        $size_overlap = $value;
+        die "Size of overlap must be greater or equal to 1." if $size_overlap < 1;
+        last OPTION;
+      };
+      $option eq 'c' and do {
+        @cutoffs = split(/\,/,$value);
+        die "Cutoffs array must be of length 2." if (@cutoffs != 2);
+        last OPTION;
+      };
+      $option eq 'r' and do {
+        @region_of_seq = split(/\,/,$value);
+        die "Region array must be of length 2." if (@region_of_seq != 2);
+        die "Region of sequence: First region must be lower than second one." if ($region_of_seq[0] > $region_of_seq[1]);
+        last OPTION;
+      };
+      $option eq 'd' and do {
+        @delim_region_to_check = split(/\,/,$value);
+        die "Region array must be of length 2." if (@delim_region_to_check != 2);
+        die "Delim region to check: First region must be lower than second one." if ($delim_region_to_check[0] > $delim_region_to_check[1]);
+        last OPTION;
+      };
+	  $option eq 'e' and do {
+		$experiment_tag = $value;
+		last OPTION;
+	  }
+    }
+};
+Getopt::Mixed::cleanup();
+
+print "# Parameters:\n";
+print "# Local date and time: " . localtime() . "\n";
+print "# Input file: $infile\n";
+print "# Temperature = $T°C\tWindow Size = $windowL\n";
+print "# Size of sequence to compare = $size_of_seqs_to_compare\tSize of Overlaping to check = $size_overlap\n";
+print "# Cut-off of DeltaGs = $cutoffs[0]\tCut-off of E1 = $cutoffs[1]\n";
+print "# Sequence region = $region_of_seq[0]:$region_of_seq[1]\n";
+print "# Region to check for true positives = $delim_region_to_check[0]:$delim_region_to_check[1]\n";
+print join("\t",("seq_name","dGs","positive_index", "energy_difference","starts","ends","type_segment","tag")) . "\n";
+
+my %NNparams    = ( 
+	# SantaLucia J (1998) PNAS 95(4): 1460-1465.
+	# [NaCl] 1M, 37C & pH=7 
+	# H(enthalpy): kcal/mol	, S(entropy): cal/k�mol
+	# stacking dinucleotides
+	'AA/TT' , {'H',-7.9, 'S',-22.2},
+	'AT/TA' , {'H',-7.2, 'S',-20.4},
+	'TA/AT' , {'H',-7.2, 'S',-21.3},
+	'CA/GT' , {'H',-8.5, 'S',-22.7},
+	'GT/CA' , {'H',-8.4, 'S',-22.4},
+	'CT/GA' , {'H',-7.8, 'S',-21.0},
+	'GA/CT' , {'H',-8.2, 'S',-22.2},
+	'CG/GC' , {'H',-10.6,'S',-27.2},
+	'GC/CG' , {'H',-9.8, 'S',-24.4},
+	'GG/CC' , {'H',-8.0, 'S',-19.9},
+	# initiation costs
+	'G'     , {'H', 0.1, 'S',-2.8 },
+	'A'     , {'H', 2.3, 'S',4.1  },
+	# symmetry correction
+	'sym'   , {'H',   0, 'S',-1.4 });
+
+my ($dGs,$positives_idxs, $starts, $ends, $promoter_type);
+open(SEQ, $infile) || die "# cannot open input $infile : $!\n";
+while(<SEQ>)
+{   
+	if(/^(b\d{4}) \\ ([ATGC]+)/)
+	{
+		my ($name,$seq) = ($1,$2); 
+	
+		my ($indexs_Ref, $deltaGs_Ref) = get_indexs_and_deltaGs_of_windows($seq, $windowL);
+		my ($e1s_Ref, $e2s_Ref, $differences_Ref, $possible_regions_Ref) = calculate_e1_and_e2($indexs_Ref,$deltaGs_Ref);
+		my @positives_idxs = extract_indexs_of_positive_signals($possible_regions_Ref, $differences_Ref, $e1s_Ref);
+		my @overlaps = check_for_segments_that_overlap(@positives_idxs);
+		my ($starts_Ref, $ends_Ref) = get_range_of_segments(\@overlaps,\@positives_idxs);
+		my @trues_or_falses = check_true_false_segment($starts_Ref, $ends_Ref);
+
+		my @starts_Ref = (na_if_empty_else_get_strings_versions($starts_Ref));
+		my @ends_Ref = (na_if_empty_else_get_strings_versions($ends_Ref));
+
+		my @results = na_if_empty_else_get_strings_versions($deltaGs_Ref, \@positives_idxs, $differences_Ref, \@starts_Ref, \@ends_Ref, \@trues_or_falses);
+		print(join("\t",$name, @results, $experiment_tag) . "\n");
+	}
+}
+close(SEQ);
+
+# Calculate NN free energy of a DNA duplex , dG(t) = (1000*dH - t*dS) / 1000
+# Parameters: 1) DNA sequence string; 2) Celsius temperature.
+# Returns: 1) Free energy scalar.
+# Notes: Uses global hash %NNparams.
+sub duplex_deltaG
+{
+   	my ($seq,$tCelsius) = @_; 
+	
+	my ($DNAstep,$nt,$dG,$total_dG) = ('','',0,0);
+	my @sequence = split(//,uc($seq));
+	my $tK = 273.15 + $tCelsius;
+	
+	sub complement{ $_[0] =~ tr/ATGC/TACG/; return $_[0] }
+	
+	# add dG for overlapping dinculeotides
+	for(my $n=0;$n<$#sequence;$n++) 
+	{
+			$DNAstep = $sequence[$n].$sequence[$n+1].'/'.
+				complement($sequence[$n].$sequence[$n+1]);
+			
+			if(!defined($NNparams{$DNAstep}))
+			{
+				$DNAstep = reverse($DNAstep);
+			}
+			
+			$dG = ((1000*$NNparams{$DNAstep}{'H'}) -
+					($tK*$NNparams{$DNAstep}{'S'})) / 1000 ;
+			
+			$total_dG += $dG; 
+	}
+	
+	# add correction for helix initiation
+	$nt = $sequence[0]; # first pair
+	if(!defined($NNparams{$nt})){ $nt = complement($nt) } 
+	$total_dG += ((1000*$NNparams{$nt}{'H'})-
+					($tK*$NNparams{$nt}{'S'})) / 1000; 
+	
+	$nt = $sequence[$#sequence]; # last pair
+	if(!defined($NNparams{$nt})){ $nt = complement($nt) }
+	$total_dG += ((1000*$NNparams{$nt}{'H'})-
+					($tK*$NNparams{$nt}{'S'})) / 1000;
+					
+	# please complete for symmetry correction
+	
+	return $total_dG;
+}
+
+# Calculate NN free energy of a DNA duplex for each window in it.
+# Parameters: 1) DNA sequence string; 2) Celsius temperature; 3) Size of windows to evaluate dG.
+# Returns: 1) Indexs of Windows; 2) dGs array of windows.
+# Notes: Uses global hash %NNparams and scalar $T.
+sub get_indexs_and_deltaGs_of_windows
+{
+	my ($seq, $windowL) = @_;
+	my $start = ($windowL -1) / 2;
+	my $end = (length $seq) - $start - 1;
+	my @indexs = $start..$end;
+	my @deltaGs = map {duplex_deltaG(substr($seq, $_ - $start, $windowL), $T)} @indexs; 
+	return(\@indexs, \@deltaGs);
+}
+
+# Calculates e1 and e2 as well as its differeces.
+# Parameters: 1) Reference array to indexs of windows; 2) Refence array of dGs.
+# Returns: 1) Array e1; 2) Array e2; 3) Array of differences (e1 -e2); 4) Array of possible regions of promoter.
+# Notes: Uses global scalar $size_of_seqs_to_compare and then it is assigned to scalar $size.
+sub calculate_e1_and_e2
+{
+	my ($indexs_Ref, $deltaGs_Ref) = @_;
+	my (@e1s, @e2s, @differences, @possible_regions, @seq);
+	my ($e1, $e2);
+	my $size = $size_of_seqs_to_compare;
+	my $deltaGsLength = @$deltaGs_Ref;
+
+	die "Invalid Size." unless ($size >= 1 and $size % 4 == 0);
+
+	foreach my $index (@{$indexs_Ref}){
+		@seq = $index..($index + $size);
+
+		last if ($seq[-1] > $deltaGsLength);
+
+		$e1 = sum(@{$deltaGs_Ref}[@seq[0..((1/4 * $size) - 1)]]) / (1/4 * $size);
+		$e2 = sum(@{$deltaGs_Ref}[@seq[(1/2 * $size)..($size-1)]]) / (1/2 * $size);
+
+		push @e1s, $e1;
+		push @e2s, $e2;
+		push @differences, $e1 - $e2;
+		push @possible_regions, $seq[1/4 * $size];
+	}
+	return(\@e1s, \@e2s, \@differences, \@possible_regions);
+}
+
+# Extract indexs of  positive signals if dGs > cutoff[0] and e1 > cutoff[2].
+# Parameters: 1) Referece array of possible regions of promoter; 2) Reference array of differences between e1 and e2; 3)Reference array of e1.
+# Returns: 1) Indices that meet the condition extracted from the array of possible_regions.
+# Notes: Uses global array @cutoffs.
+sub extract_indexs_of_positive_signals
+{
+	my ($possible_regions_Ref, $differences_Ref, $e1s_Ref) = @_;
+	my (@positives_idxs, $i); my @indexs = @$possible_regions_Ref;
+
+	for $i (0..@{$differences_Ref} - 1){
+		push @positives_idxs, $indexs[$i] if((@$differences_Ref[$i] > $cutoffs[0]) and (@$e1s_Ref[$i] > $cutoffs[1]));
+	}
+	return (@positives_idxs);
+}
+
+# Boolean function of segments that overlap. 1 if segments shared nucleotides in range of $size_of_segment else 0.
+# Parameters: 1) Array of positive indexs.
+# Returns: 1) Array of booleans (1,0). 
+# Notes: Uses global scalar $size_overlap.
+sub check_for_segments_that_overlap
+{
+	my (@positives_idxs) = @_;
+	return map {($positives_idxs[$_] + $size_overlap >= $positives_idxs[$_ + 1] - $size_overlap) ? 1 : 0} 0..(@positives_idxs - 2);
+}
+
+# Get starts and ends of segments.
+# Parameters: 1) Reference array of overlaps; 2) Reference array of positive_idxs.
+# Returns: 1) Reference array of starts. 2) Reference array of ends.
+sub get_range_of_segments
+{
+	my ($overlaps, $positives_idxs) = @_;
+
+	my (@starts, @ends, $start_idx, $i);
+	my $start_segment = 0;
+
+	for $i (0..@{$positives_idxs} - 1){
+
+		if (@{$positives_idxs} == 1){
+			push(@starts, ${$positives_idxs}[$i]);
+			push(@ends, ${$positives_idxs}[$i]);
+			next;
+		}
+
+		next if (${$overlaps}[$i] and $start_segment);
+		if(${$overlaps}[$i]){
+			$start_idx = ${$positives_idxs}[$i];
+			$start_segment = 1;
+		}
+		else{
+			if($start_segment > 0){
+				push(@starts, $start_idx);
+				push(@ends, ${$positives_idxs}[$i]);
+				$start_segment = 0;
+			}
+			else{
+				$start_segment = 0;
+			}
+		}
+	}
+	return(\@starts, \@ends);
+}
+
+# Check if the segments found are within a bounded region.
+# Parameters: 1) Reference array of starts; 2) Reference array of ends;
+# Returns: 1) Array with TRUE or FALSE string if the segment meets the condition.
+sub check_true_false_segment
+{
+	my ($starts_Ref, $ends_Ref) = @_;
+	my @starts = @{$starts_Ref};
+	my @ends = @{$ends_Ref};
+	my ($l, $u) = @delim_region_to_check;
+	my @region = $region_of_seq[0]..$region_of_seq[1];
+
+	return map {(($region[$starts[$_]] >= $l) and ($region[$ends[$_]] <= $u)) ? "TRUE" : "FALSE"} 0..@{$starts_Ref}-1;
+}
+
+# Join the elements of a vector with commas if it is not empty.
+# Parameters: 1) Refenreces of Arrays to check.
+# Returns: 1) NA if empty else string version of array.
+sub na_if_empty_else_get_strings_versions
+{
+	my (@arrays_to_check) = @_;
+	return map{@{$_} ? join(",", @{$_}) : "NA"} @arrays_to_check;
+}
+
+```
+
+### 1.4 Parámetros
+
+| N. Parámetro 	| Forma Corta 	| Forma Larga         	| Ejemplo                  	|
+|--------------	|-------------	|---------------------	|--------------------------	|
+| 1            	| -i          	| - -inputfile        	| ../data/K12_400_50_sites 	|
+| 2            	| -t          	| - -temperature      	| 37                       	|
+| 3            	| -w          	| - -window_length    	| 15                       	|
+| 4            	| -s          	| - -size_compare     	| 200                      	|
+| 5            	| -o          	| - -size_overlap     	| 25                       	|
+| 6            	| -c          	| - -cutoffs          	| 3.4,-15.99               	|
+| 7            	| -r          	| - -region_seq       	| -400,500                 	|
+| 8            	| -d          	| - -delimited_region 	| -150,50                  	|
+| 9            	| -e          	| - -tag              	| test1                     |
+
+#### 1.2.1 Características de archivo de entrada
+Las líneas leídas por el programa para su análisis deben cumplir:  
+  
+* Secuencia e identificador en misma línea.
+* Expresión regular:  `/^(b\d{4}) \\ ([ATGC]+)/`.
+  `Nota: Si tus secuencias siguen otro patrón puedes acceder al código fuente y modificarlo a tu conveniencia.`
+
+#### 1.3 Ejemplos de uso
+##### 1.3.1 Forma corta
+```{bash, eval = FALSE}
+perl nearest_neighbor_dG_calculator.pl -i ../data/K12_400_50_sites -t 37 -w 15 -s 200 -o 25 -c 3.4,-15.99 -r -400,50 -d -150,50 -e test1
+```
+##### 1.3.2 Forma extendida
+```{bash, eval = FALSE}
+perl nearest_neighbor_dG_calculator.pl --inputfile ../data/K12_400_50_sites --temperature 37 --window_length 15 --size_compare 200 --size_overlap 25 --cutoffs 3.4,-15.99 --region_seq -400,50 --delimited_region -150,50 --experiment_tag test1
+```
+##### 1.3.3 Forma mixta
+```{bash, eval = FALSE}
+perl nearest_neighbor_dG_calculator.pl -i data/K12_400_50_sites -t 37 --window_length 15 -s 200 -o 25 --cutoffs 3.4,-15.99 -r -400,50 -d -150,50 -e test1
+```
+
+#### 1.4 Salida  
+El programa imprimera por *standard output* lo siguiente:  
+  
+* Ocho líneas de comentarios con parámetros de ejecución. Identificador de comentario: `#`.
+* Cabecera:
+
+      | Nombre de secuencia 	| Energía libre de Gibbs 	| Indices positivos 	| Diferencia de energía 	| inicios 	| finales 	| clasificación de segmentos 	| etiqueta 	  |
+      |---------------------	|------------------------	|-------------------	|-----------------------	|---------	|---------	|----------------------------	|----------	  |
+      | seq_name            	| dGs                    	| positive_index    	| energy_difference     	| starts  	| ends    	| type_segment               	| tag      	  |
+* Observaciones:
+    * Un único valor: `1`
+    * Uno o mas separados por coma: `2`
+    * Posibles NA: `3`
+
+| seq_name 	| dGs 	| positive_index 	| energy_difference 	| starts 	| ends 	| type_segment 	| tag 	|
+|:--------:	|:---:	|:--------------:	|:-----------------:	|:------:	|:----:	|:------------:	|:---:	|
+|     1    	|  2  	|       2,3      	|        2,3        	|   2,3  	|  2,3 	|      2,3     	|  1  	|
+
+## 2. Antes de Comenzar
+### 2.1 Instalación de tidyverse
+**tidyverse** es un conjunto de paquetes que funcionan en armonía porque comparten representaciones de datos comunes y diseño de API. El paquete tidyverse está diseñado para facilitar la instalación y carga de los paquetes principales desde el tidyverse en un solo comando.  
+
+Si desea aprender a usar el tidyverse de manera efectiva, el mejor lugar para comenzar es [R for data science](https://r4ds.had.co.nz/).  
+```{r, eval=FALSE}
+# Install from CRAN
+install.packages("tidyverse")
+
+# Or the development version from GitHub
+# install.packages("devtools")
+devtools::install_github("hadley/tidyverse")
+```
+### 2.2 ¿Cómo llamarlo?
+```{r, results='hide', message=FALSE}
+library(tidyverse)
+```
+
+## 3. Funciones propias  
+  
+### 3.1 Correr un nuevo experimento  
+Como podrás haber notado en la sección *1.3* puede resultar tedioso el tener que escribir todo el comando que ejecutará el programa para calcular las diferencias de energía en nuestras secuencias, además de que si queremos realizar multiples experimentos tendríamos que escribirlo una y otra vez. Por ello se ha decidido crear una función que se encargue de crear y ejecutar la *cadena* con tan sólo pasar los parámetros necesarios.
+```{r}
+run_new_experiment <- function(i,t,w,s,o,c,r,d,e = "Experiment1", out = "promoter")
+{
+  c <- paste(c, collapse = ","); r <- paste(r, collapse = ","); d <- paste(d, collapse = ",")
+  run <- paste("perl nearest_neighbor_dG_calculator.pl -i",i, "-t",t, "-w", w, "-s", s,
+        "-o", o, "-c", c, "-r", r, "-d", d, "-e", e, ">", out)
+  system(run)
+}
+```
+
+
+### 3.2 Campos con multiples observaciones 
+¿Cómo lidiar con los multiples resultados que puede arrojar el algoritmo por campo?  
+La función `separate_rows` del paquete *tidyr* puede ayudarnos ya que si una variable contiene observaciones con múltiples valores delimitados, ésta separará los valores y los colocará cada uno en su propia fila.  
+Algunas veces no sólo querremos separar los campos, sino también conservar algunas columnas que nos sirvan como identificadores en el proceso de análisis de datos. Esta es la razón de que la función tome como parámetro un *vector/lista* que contenga los nombres de las variables a conservar en nuestros datos.  
+```{r}
+select_cols_sep_rows <- function(.data, ..., .ids = NULL, sep = ",", convert = TRUE)
+{
+  require(dplyr)
+  require(tidyr)
+  if (missing(...)) stop("No columns to select.")
+  return(.data %>% select(.ids, ...) %>% separate_rows(..., sep = sep, convert = convert))
+}
+```
+  
+### 3.3 Obtención de región de vententas
+Está función es realmente un problema que se les pasó a los *desarrolladores* del programa número 1, ya que estos no incluyeron una columna en la que se especifiquen los índices relativos de cada una de las ventanas en el rango especificado. Esperemos lo arreglen en futuras versiones.
+```{r}
+get_window_region <- function(windowL, region)
+{
+  start <- (windowL - 1) / 2 + 1
+  region <- region[1]:region[2]
+  region[(start-1):(length(region) - start)]
+}
+```
+
+### 3.4 Generación de secuencias aleatorias
+Para comparar resultados puedes generar secuencias aleatorias de tamaños iguales a los de tus secuencias.
+Si lo requieres puedes agregar un vector de probabilidades para cada nucléotico tras haber calibrado los contenidos de AT,CG de tus secuencias. 
+Ejemplo: `probs = c(0.25,0.25,0.25,0.25)` será pasado mediante `...` a la función `sample`.
+```{r}
+generate_random_seqs <- function(n,length, out = NULL, ...)
+{
+  random_seqs <- map_chr(1:n, function(x){
+      sequence <- paste(sample(c("A","C","G","T"), size = length, replace = TRUE, ...), collapse="")
+      identifier <- paste0("b",str_pad(x, width = 4, side = "left", pad = "0"))
+      return(paste0(identifier," \\ ", sequence, " \\"))
+      })
+  if (is.null(out)){
+    return(random_seqs)
+  }
+  write_lines(random_seqs, out)
+}
+```
+O hacer uso de [RSAT]() y después parsearlo a un formato adecuado para el programa.
+```{bash, eval=FALSE}
+random-seq -l 451 -n 84 -org Escherichia_coli_K_12 -o example_random_sequences.fasta
+```
+
+
+## 4. Corriendo Experimentos con R  
+El primer paso será definir una lista de parámetros. Estos serán definidos bajo las específicaciones de la función *pmap* del paquete *purrr* para programación funcional. Aquí podrás encontrar documentación y ejemplos: [Map over multiple inputs simultaneously](https://purrr.tidyverse.org/reference/map2.html).  
+```{r}
+experiments <- list(
+  i = list("../data/K12_400_50_sites","../data/randomseqs.txt"), # Input sequences files.
+  t = list(37), # Temperature to simulate.
+  w = list(15), # Window Length.
+  s = list(200,200), # Size of segment.
+  o = list(25), # Overlap size.
+  c = list(c(3.4,-15.99),c(3.4,-15.99)), # Cutoffs for dGs and E1.
+  r = list(c(-400,50), c(-400,50)), # Region of sequences.
+  d = list(c(-150,50), c(-150,50)), # Interest Region to check for true positives.
+  e = list("segment_200", "random_seqs"), # Tag experiments.
+  out = list("../data/possible_promoter.tsv","../data/random.tsv") # Outfiles paths.
+)
+system_out <- pmap(experiments, run_new_experiment)
+```
+
+## 5. Manipulación de Datos
+Haciendo uso de la función *map_df* podemos leer cada uno de los archivos generados en el paso anterior y concatenarlos en un único data frame.
+```{r}
+experiments_data <- map_df(experiments$out, read_tsv, comment = "#", col_types = c("cccccccc"))
+```
+Para poder conservar el orden de las etiquetas de cada archivo deberemos asignarlas como factor.  
+```{r}
+experiments_data$tag <- factor(experiments_data$tag, levels = experiments$e)
+```
+Ahora es momento de obtener subconjuntos de datos para trabajarlos cada uno por separado.  
+```{r}
+windows_regions <- pmap(experiments[c("w","r")], get_window_region) 
+dGs_data <- select_cols_sep_rows(experiments_data, .ids = c("seq_name", "tag"), dGs)
+diff_data <- select_cols_sep_rows(experiments_data, .ids = c("seq_name", "tag"), energy_difference)
+segments_data <- select_cols_sep_rows(experiments_data, .ids = c("seq_name","tag"), type_segment)
+```
+En los primeros dos pipelines agregamos una nueva columna llamada *relative_position* que contiene las posiciones relativas a los índices de las ventanas evaluadas para cada experimento.  
+El los últimos dos pipelines obtenemos los datos minimos para cada secuencia en cada experimento y los porcentajes de categorías de cada segmento; positivivo verdadero = TRUE, falso verdadero = FALSE, NA = posible segmento no encontrado.
+```{r}
+dGs_data <- dGs_data %>% group_by(tag) %>% summarize(n = n()) %>%
+  select(-tag) %>% t() %>% as.data.frame() %>% 
+  map2(windows_regions,~rep_len(.y, .x[1])) %>%
+  flatten_int() %>% mutate(.data = dGs_data, relative_position = .)
+
+diff_data <- diff_data %>% group_by(tag) %>%
+  summarize(max = max(table(seq_name)), n = n()) %>%
+  select(-tag) %>% t() %>% as.data.frame() %>%
+  map2(windows_regions, ~rep_len(.y[1:.x[1]],.x[2])) %>%
+  flatten_int() %>% mutate(.data = diff_data, relative_position = .)
+
+min_diff_data <- diff_data %>% group_by(tag,seq_name) %>%
+  summarize(min_ = min(energy_difference)) 
+
+segments_data <- segments_data %>% count(tag,type_segment) %>%
+  group_by(tag) %>% mutate(percent = n / sum(n))
+```
+
+## 6. Visualización de Datos
+```{r pos_vs_dGs, fig.cap="**Figure 3. Gibbs free energy per Window per Experiment.** "}
+ggplot(dGs_data, aes(x = relative_position, y= dGs, color = seq_name)) +
+  geom_line(alpha = 1/4) + 
+  labs(x = "Nucleotide Position", y = expression(Delta*Gs)) +
+  theme(legend.position="none") +
+  facet_wrap(~tag, scales = "free")
+```
+
+```{r D(n), fig.cap="**Figure 4. D(n) per window avaible in sequence region.**"}
+ggplot(diff_data, aes(x = relative_position, y= energy_difference, color = seq_name)) +
+  geom_line(alpha = 1/2) +
+  labs(x = "Nucleotide Position", y = expression(D(n))) +
+  theme(legend.position="none") +
+  facet_wrap(~ tag, scales = "free")
+```
+
+```{r distributions_of_minimus_per_sequence, fig.align='center', message=FALSE, fig.cap="**Figure 5. Density distribution of minimun D(n) per secuence per experiment condition.**"}
+ggplot(min_diff_data, aes(x=min_, fill = tag)) +
+  geom_histogram(alpha = 0.3, position = "identity", aes(y = ..density..), color = "black") +
+  geom_density(alpha = 0.5) +
+  geom_vline(aes(xintercept = mean(min_)), color = "black", linetype = "dashed", size = 1) +
+  labs(x = "Difference of Energy", y = "Density") + guides(fill = guide_legend(title = "Tag of Experiment"))
+```
+
+```{r percentage,fig.align='center', fig.cap= "**Figure 6. Percentage of true positives (blue), false positives (red) and NA (gray) per experiment condition.**"}
+ggplot(segments_data, aes(x = tag, y = percent, fill = type_segment)) +
+  geom_col(position = "fill") +
+  geom_label(aes(label = scales::percent(percent)),
+             position = "fill", color = "white", vjust = 1, show.legend = FALSE) +
+  scale_y_continuous(labels = scales::percent) + 
+  labs(x = "Tag of Experiment", y = "Percentage") +
+  guides(fill = guide_legend(title = "Type of Segments"))
+```
+
+```{r percentage_less_to_right, echo=FALSE, out.width=1000, out.height=1000, fig.cap="**Figura 7. Effect of evaluating more segments to the right.**"}
+img <- readPNG("./figures/percentage_less_to_right.png")
+grid.raster(img)
+```
+
+## 7. A divertise
+Ahora que has terminado de leer esto puedes regresar y probar con distintas combinaciones de parametros para descubrir patrones que puedan estar ocultos por ahí... Suerte.
+
+
